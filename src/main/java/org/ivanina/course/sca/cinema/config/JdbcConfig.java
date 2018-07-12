@@ -1,5 +1,7 @@
 package org.ivanina.course.sca.cinema.config;
 
+import org.ivanina.course.sca.cinema.dao.*;
+import org.ivanina.course.sca.cinema.dao.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -64,5 +66,31 @@ public class JdbcConfig {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
         return jdbcTemplate;
+    }
+
+    @Bean(name = "userDao")
+    public UserDao userDao() {
+        return new UserDaoImpl();
+    }
+
+
+    @Bean(name = "eventDao")
+    public EventDao eventDao() {
+        return new EventDaoImpl();
+    }
+
+    @Bean(name = "eventScheduleDao")
+    public EventScheduleDao eventScheduleDao() {
+        return new EventScheduleDaoImpl();
+    }
+
+    @Bean(name = "auditoriumDao")
+    public AuditoriumDao auditoriumDao() {
+        return new AuditoriumDaoImpl();
+    }
+
+    @Bean(name = "ticketDao")
+    public TicketDao ticketDao() {
+        return new TicketDaoImpl();
     }
 }

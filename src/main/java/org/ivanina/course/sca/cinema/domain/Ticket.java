@@ -60,6 +60,14 @@ public class Ticket extends DomainObject implements Comparable<Ticket> {
         this.price = price;
     }
 
+    public EventSchedule getEventSchedule() {
+        return eventSchedule;
+    }
+
+    public void setEventSchedule(EventSchedule eventSchedule) {
+        this.eventSchedule = eventSchedule;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
