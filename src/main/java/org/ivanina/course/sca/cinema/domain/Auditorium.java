@@ -12,7 +12,7 @@ public class Auditorium extends DomainObject {
     @NonNull
     private String name;
 
-    private Long numberOfSeats;
+    private Long seats;
 
     private Set<Long> vipSeats = Collections.emptySet();
 
@@ -20,10 +20,10 @@ public class Auditorium extends DomainObject {
         this.name = name;
     }
 
-    public Auditorium(Long id, String name, Long numberOfSeats, Set<Long> vipSeats) {
+    public Auditorium(Long id, String name, Long seats, Set<Long> vipSeats) {
         this.setId(id);
         this.name = name;
-        this.numberOfSeats = numberOfSeats;
+        this.seats = seats;
         this.vipSeats = vipSeats;
     }
 
@@ -35,12 +35,12 @@ public class Auditorium extends DomainObject {
         this.name = name;
     }
 
-    public long getNumberOfSeats() {
-        return numberOfSeats;
+    public long getSeats() {
+        return seats;
     }
 
-    public void setNumberOfSeats(long numberOfSeats) {
-        this.numberOfSeats = numberOfSeats;
+    public void setSeats(long seats) {
+        this.seats = seats;
     }
 
     public Set<Long> getVipSeats() {
@@ -67,8 +67,8 @@ public class Auditorium extends DomainObject {
                         .collect(Collectors.toSet());
     }
 
-    public Set<Long> getSeats() {
-        return LongStream.rangeClosed(1L, numberOfSeats)
+    public Set<Long> getSeatsSet() {
+        return LongStream.rangeClosed(1L, seats)
                 .boxed()
                 .collect(Collectors.toSet());
     }
@@ -90,6 +90,6 @@ public class Auditorium extends DomainObject {
 
     @Override
     public String toString() {
-        return "Auditorium '" + name + "' with " + numberOfSeats + " seats" + (getId() != null ? " (ID: " + getId() + ")" : "");
+        return "Auditorium '" + name + "' with " + seats + " seats" + (getId() != null ? " (ID: " + getId() + ")" : "");
     }
 }

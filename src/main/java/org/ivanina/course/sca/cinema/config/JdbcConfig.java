@@ -44,7 +44,7 @@ public class JdbcConfig {
         rc = new ClassPathResource("db/initUsers.sql");
         ScriptUtils.executeSqlScript(dataSource.getConnection(), rc);
 
-        rc = new ClassPathResource("db/initEvent.sql");
+        rc = new ClassPathResource("db/initEvents.sql");
         ScriptUtils.executeSqlScript(dataSource.getConnection(), rc);
     }
 

@@ -8,6 +8,7 @@ CREATE TABLE USERS
   email VARCHAR(64) NOT NULL
 );
 CREATE UNIQUE INDEX users_email_uindex ON USERS (email);
+-- ----------------------------------------------------
 
 DROP TABLE IF EXISTS AUDITORIUMS;
 CREATE TABLE AUDITORIUMS
@@ -18,6 +19,7 @@ CREATE TABLE AUDITORIUMS
   vipSeats VARCHAR(512)
 );
 CREATE UNIQUE INDEX AUDITORIUMS_name_uindex ON AUDITORIUMS (name);
+-- ---------------------------------------------------
 
 DROP TABLE IF EXISTS EVENTS;
 CREATE TABLE EVENTS
@@ -29,9 +31,9 @@ CREATE TABLE EVENTS
   duration BIGINT
 );
 CREATE UNIQUE INDEX EVENTS_name_uindex ON EVENTS (name);
+-- ----------------------------------------------------
 
 DROP TABLE IF EXISTS EventSchedule;
-
 CREATE TABLE EventSchedule
 (
   id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
@@ -40,11 +42,9 @@ CREATE TABLE EventSchedule
   startDateTime DATETIME NOT NULL
 );
 CREATE UNIQUE INDEX EventSchedule_event_id_auditorium_id_startDateTime_uindex ON EventSchedule (event_id, auditorium_id, startDateTime);
-
-
+-- ---------------------------------------------------
 
 DROP TABLE IF EXISTS TICKETS;
-
 CREATE TABLE TICKETS
 (
   id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,

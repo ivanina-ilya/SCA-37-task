@@ -6,8 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="SCA-37" />
         <module name="SCA-37-task" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="SCA-37" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
