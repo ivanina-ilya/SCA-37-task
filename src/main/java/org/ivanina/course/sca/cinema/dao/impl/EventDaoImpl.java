@@ -145,7 +145,7 @@ public class EventDaoImpl  implements EventDao {
         String eventRating = resultSet.getString("rating");
         event.setRating(eventRating == null ? null : EventRating.valueOf(eventRating));
         event.setDuration(resultSet.getLong("duration"));
-        event.setPrice(resultSet.getBigDecimal("basePrice"));
+        event.setPrice(resultSet.getBigDecimal("price"));
 
         return event;
     }
