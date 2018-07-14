@@ -1,12 +1,10 @@
 package org.ivanina.course.sca.cinema.dao.impl;
 
-import org.ivanina.course.sca.cinema.dao.AuditoriumDao;
 import org.ivanina.course.sca.cinema.dao.EventDao;
 import org.ivanina.course.sca.cinema.domain.Event;
 import org.ivanina.course.sca.cinema.domain.EventRating;
 import org.ivanina.course.sca.cinema.service.Util;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,9 +15,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Set;
 
 public class EventDaoImpl  implements EventDao {
     private String table = "events";
@@ -78,6 +75,8 @@ public class EventDaoImpl  implements EventDao {
             return null;
         }
     }
+
+
 
     @Override
     public Long save(Event entity) {

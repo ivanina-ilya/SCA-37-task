@@ -3,9 +3,7 @@ package org.ivanina.course.sca.cinema.dao.impl;
 import org.ivanina.course.sca.cinema.dao.AuditoriumDao;
 import org.ivanina.course.sca.cinema.dao.EventDao;
 import org.ivanina.course.sca.cinema.dao.EventScheduleDao;
-import org.ivanina.course.sca.cinema.domain.Event;
 import org.ivanina.course.sca.cinema.domain.EventSchedule;
-import org.ivanina.course.sca.cinema.domain.User;
 import org.ivanina.course.sca.cinema.service.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -65,6 +63,19 @@ public class EventScheduleDaoImpl implements EventScheduleDao {
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    @Override
+    public Set<EventSchedule> getEventScheduleByEvent(Long eventId) {
+        return new HashSet<>(jdbcTemplate.query("SELECT * FROM  " + table + " WHERE event_id=? ",
+                new Object[]{eventId},
+                new RowMapper<EventSchedule>() {
+                    @Nullable
+                    @Override
+                    public EventSchedule mapRow(ResultSet resultSet, int i) throws SQLException {
+                        return mapRow2(resultSet);
+                    }
+                }));
     }
 
     @Override

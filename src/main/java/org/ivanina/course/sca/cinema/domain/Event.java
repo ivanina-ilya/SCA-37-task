@@ -1,17 +1,9 @@
 package org.ivanina.course.sca.cinema.domain;
 
-import org.ivanina.course.sca.cinema.service.Util;
 import org.springframework.lang.NonNull;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.NavigableMap;
-import java.util.NavigableSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 public class Event extends DomainObject {
     @NonNull

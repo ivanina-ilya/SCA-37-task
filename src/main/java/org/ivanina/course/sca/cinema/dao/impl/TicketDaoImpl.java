@@ -22,12 +22,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class TicketDaoImpl implements TicketDao {
     private String table = "Tickets";
+    private String tableUser = "Users";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -59,15 +59,18 @@ public class TicketDaoImpl implements TicketDao {
         }
     }
 
+
     @Override
-    public NavigableSet<Ticket> getTicketsByEvent(Long eventId, LocalDateTime dateTime) {
+    public NavigableSet<Ticket> getTicketsByUserForEvent(User user, EventSchedule eventSchedule) {
         try {
             return new TreeSet<Ticket>(
                     jdbcTemplate.queryForList(
-                            "SELECT * FROM  " + table + " WHERE EVENT_ID=? AND DATETIME=?",
+                            "SELECT t.* FROM  " + table + " t " +
+                                    " RIGHT JOIN "+tableUser+" u ON u.id=t.user_id " +
+                                    " WHERE eventSchedule_id=? AND u.id=? ",
                             new Object[]{
-                                    eventId,
-                                    dateTime.withNano(0)
+                                    eventSchedule.getId(),
+                                    user.getId()
                             }).stream()
                             .map(row -> getTicket((Map) row))
                             .collect(Collectors.toSet()
@@ -76,7 +79,7 @@ public class TicketDaoImpl implements TicketDao {
             return null;
         }
     }
-    
+
 
     @Override
     public NavigableSet<Ticket> getTicketsByEvent(EventSchedule eventSchedule) {

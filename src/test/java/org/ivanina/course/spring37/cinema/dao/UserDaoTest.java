@@ -1,7 +1,8 @@
 package org.ivanina.course.spring37.cinema.dao;
 
-import org.ivanina.course.sca.cinema.config.ApplicationSpringConfig;
 import org.ivanina.course.sca.cinema.config.JdbcConfig;
+import org.ivanina.course.sca.cinema.config.SpringAppConfig;
+import org.ivanina.course.sca.cinema.config.WebAppConfig;
 import org.ivanina.course.sca.cinema.dao.UserDao;
 import org.ivanina.course.sca.cinema.domain.User;
 import org.junit.Test;
@@ -10,15 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Set;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {ApplicationSpringConfig.class, JdbcConfig.class})
+@ContextConfiguration(classes = {SpringAppConfig.class, JdbcConfig.class, WebAppConfig.class})
+@WebAppConfiguration
 public class UserDaoTest {
     @Autowired
     @Qualifier("userDao")

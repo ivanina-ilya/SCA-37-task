@@ -1,7 +1,7 @@
 package org.ivanina.course.sca.cinema.service.impl;
 
 import org.apache.log4j.Logger;
-import org.ivanina.course.sca.cinema.domain.Event;
+import org.ivanina.course.sca.cinema.domain.EventSchedule;
 import org.ivanina.course.sca.cinema.domain.User;
 import org.ivanina.course.sca.cinema.service.DiscountService;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +36,7 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
-    public byte getDiscount(@Nullable User user, Event event, LocalDateTime airDateTime, long numberOfTickets) {
+    public byte getDiscount(@Nullable User user, EventSchedule eventSchedule, long numberOfTickets) {
         Set<Byte> discountList = new HashSet<>();
 
         if(discountByLucky > 0 && isLuckyWinnerDiscount()) {
@@ -44,7 +44,7 @@ public class DiscountServiceImpl implements DiscountService {
             return discountByLucky;
         }
 
-        discountList.add(getDiscountByBirthday(user, airDateTime));
+        discountList.add(getDiscountByBirthday(user, eventSchedule.getStartDateTime()));
         discountList.add(getDiscountByCount(user, numberOfTickets));
 
         return discountList.stream().max(Byte::compareTo).orElse((byte) 0);
@@ -70,4 +70,6 @@ public class DiscountServiceImpl implements DiscountService {
     public Boolean isLuckyWinnerDiscount() {
         return new Random().nextInt(discountLuckyFrequency) == 1;
     }
+
+
 }

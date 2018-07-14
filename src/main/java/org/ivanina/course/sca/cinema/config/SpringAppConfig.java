@@ -5,5 +5,5 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan({"org.ivanina.course.sca.cinema"})
-public class ApplicationSpringConfig {
+public class SpringAppConfig {
 }
