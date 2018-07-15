@@ -30,6 +30,7 @@
         <log4j.version>1.2.17</log4j.version>
         <h2.version>1.4.197</h2.version>
         <jstl.version>1.2</jstl.version>
+        <freemarker.version>2.3.23</freemarker.version>
     </properties>
 
     <dependencies>
@@ -57,11 +58,22 @@
             <version>${spring.version}</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>javax.servlet.jsp.jstl</groupId>
             <artifactId>jstl-api</artifactId>
             <version>${jstl.version}</version>
+        </dependency>-->
+        <dependency><!-- needed for freemarker FreeMarkerConfigurer stuff -->
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>${freemarker.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>com.h2database</groupId>
