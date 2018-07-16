@@ -8,9 +8,11 @@ import org.ivanina.course.sca.cinema.domain.EventRating;
 import org.ivanina.course.sca.cinema.domain.EventSchedule;
 import org.ivanina.course.sca.cinema.domain.User;
 import org.ivanina.course.sca.cinema.service.AuditoriumService;
+import org.ivanina.course.sca.cinema.service.Discount;
 import org.ivanina.course.sca.cinema.service.DiscountService;
 import org.ivanina.course.sca.cinema.service.EventService;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,26 +38,52 @@ public class DiscountServiceTest {
     @Qualifier("auditoriumService")
     private AuditoriumService auditoriumService;
 
+    private User user;
+    private Event event;
+    private LocalDateTime dateTime;
+    private EventSchedule eventSchedule;
 
-    @Test
-    public void getDiscountTest(){
-        LocalDateTime dateTime = LocalDateTime.now().plusDays(1L);
-        User user = new User("John","test", "test@test.com");
-        Event event = new Event("Test Event");
+
+
+    @Before
+    public void setup(){
+        dateTime = LocalDateTime.now().plusDays(1L);
+        user = new User("John","test", "test@test.com");
+        event = new Event("Test Event");
         event.setPrice( new BigDecimal(100.0 ));
         event.setRating(EventRating.HIGH);
+        eventSchedule = new EventSchedule(event,auditoriumService.getByName("Gold"),dateTime);
+    }
 
-        EventSchedule eventSchedule = new EventSchedule(event,auditoriumService.getByName("Gold"),dateTime);
+    @Test
+    public void testDiscountNoDiscount(){
+        Discount discount = discountService.getDiscount(user,eventSchedule,5);
+        if(discount.isByWinner()) assertEquals(100,discount.getPercent());
+        else assertEquals(0,discount.getPercent());
+    }
 
-        byte discount = 0;
-        discount = discountService.getDiscount(user,eventSchedule,5);
-        assertEquals(0,discount);
-
+    @Test
+    public void testDiscountByBirthday(){
         user.setBirthday( dateTime.toLocalDate() );
-        discount = discountService.getDiscount(user,eventSchedule,5);
-        assertEquals(10,discount);
+        Discount discount = discountService.getDiscount(user,eventSchedule,5);
+        if(discount.isByWinner()) assertEquals(100,discount.getPercent());
+        else assertEquals(10,discount.getPercent());
+        user.setBirthday( dateTime.toLocalDate().minusYears(10L) );
+    }
 
-        discount = discountService.getDiscount(user,eventSchedule,15);
-        assertEquals(50,discount);
+    @Test
+    public void testDiscountByCoutn(){
+        Discount discount = discountService.getDiscount(user,eventSchedule,15);
+        if(discount.isByWinner()) assertEquals(100,discount.getPercent());
+        else assertEquals(50,discount.getPercent());
+    }
+
+    @Test
+    public void testDiscountByMultyDiscount(){
+        user.setBirthday( dateTime.toLocalDate() );
+        Discount discount = discountService.getDiscount(user,eventSchedule,15);
+        if(discount.isByWinner()) assertEquals(100,discount.getPercent());
+        else assertEquals(50,discount.getPercent());
+        user.setBirthday( dateTime.toLocalDate().minusYears(10L) );
     }
 }

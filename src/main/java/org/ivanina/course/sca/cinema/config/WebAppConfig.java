@@ -16,14 +16,6 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 @ComponentScan("org.ivanina.course.sca.cinema.controller")
 public class WebAppConfig implements WebMvcConfigurer {
 
-    /*@Bean
-    public ViewResolver getViewResolver() {
-        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setPrefix("/WEB-INF/pages/");
-        viewResolver.setSuffix(".jsp");
-        return viewResolver;
-    }*/
-
     @Bean
     public FreeMarkerViewResolver freemarkerViewResolver() {
         FreeMarkerViewResolver resolver = new FreeMarkerViewResolver();

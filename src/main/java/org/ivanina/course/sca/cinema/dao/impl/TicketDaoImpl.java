@@ -112,6 +112,11 @@ public class TicketDaoImpl implements TicketDao {
     }
 
     @Override
+    public Long getCount() {
+        return jdbcTemplate.queryForObject("SELECT count(*) FROM "+ table, new Object[]{}, Long.class) ;
+    }
+
+    @Override
     public Ticket get(Long id) {
         try {
             return jdbcTemplate.queryForObject(

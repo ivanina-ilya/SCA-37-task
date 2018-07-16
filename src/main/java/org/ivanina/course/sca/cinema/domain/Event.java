@@ -19,6 +19,7 @@ public class Event extends DomainObject {
 
     public Event(String name) {
         this.name = name;
+        this.rating = EventRating.MID;
     }
 
     public Event(Long id, String name, BigDecimal price, Long duration, EventRating rating) {
@@ -80,10 +81,9 @@ public class Event extends DomainObject {
 
     @Override
     public String toString() {
-        return String.format("Event '%s' with %s rating; Price: %s (ID: %d)",
+        return String.format("Event '%s' with %s rating; (ID: %d)",
                 name,
                 rating.name(),
-                NumberFormat.getCurrencyInstance().format(price),
                 getId());
     }
 }

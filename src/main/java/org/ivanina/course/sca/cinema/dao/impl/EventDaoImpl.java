@@ -55,6 +55,11 @@ public class EventDaoImpl  implements EventDao {
                 }));
     }
 
+    @Override
+    public Long getCount() {
+        return jdbcTemplate.queryForObject("SELECT count(*) FROM "+ table, new Object[]{}, Long.class) ;
+    }
+
 
     @Override
     public Event get(Long id) {

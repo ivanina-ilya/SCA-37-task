@@ -42,7 +42,7 @@ public class BookingServiceImpl implements BookingService {
     public BigDecimal getTicketsPrice(@Nullable User user, EventSchedule eventSchedule, Set<Long> seats) {
         BigDecimal basePrice = discountService.calculatePrice(
                 eventSchedule.getEvent().getPrice(),
-                discountService.getDiscount(user, eventSchedule, seats.size())
+                discountService.getDiscount(user, eventSchedule, seats.size()).getPercent()
         );
 
         basePrice = basePrice.setScale(2, RoundingMode.HALF_UP);
@@ -80,7 +80,7 @@ public class BookingServiceImpl implements BookingService {
             ticket.setPrice(
                     discountService.calculatePrice(
                             ticket.getEventSchedule().getEvent().getPrice(),
-                            discountService.getDiscount(ticket.getUser(), ticket.getEventSchedule(), tickets.size())
+                            discountService.getDiscount(ticket.getUser(), ticket.getEventSchedule(), tickets.size()).getPercent()
                     )
             );
             ticketDao.save(ticket);
@@ -112,7 +112,8 @@ public class BookingServiceImpl implements BookingService {
         Ticket ticket = new Ticket(user, eventSchedule, seat);
         ticket.setPrice(
                 discountService.calculatePrice(eventSchedule.getEvent().getPrice(),
-                        discountService.getDiscount(user, eventSchedule, 1L)));
+                        discountService.getDiscount(user, eventSchedule, 1L).getPercent())
+        );
         purchaseValidate(ticket);
         ticket.setId(ticketDao.save(ticket));
         return ticket;
@@ -132,13 +133,10 @@ public class BookingServiceImpl implements BookingService {
         Event event = eventService.get(ticket.getEventSchedule().getEvent().getId());
         if (event == null)
             throw new IllegalArgumentException("The event not available [" + ticket.getEventSchedule().getEvent() + "]");
-        // TODO: getAvailableEventDate
-        /*if (eventService.getAvailableEventDate(event).stream()
+
+        if (eventService.getAvailableEventDate(event).stream()
                 .noneMatch(date -> ticket.getDateTime().isEqual(date)))
-            throw new IllegalArgumentException("The date [" + ticket.getDateTime() + "] for event not available [" + ticket.getEventSchedule().getEvent() + "]");*/
-        // TODO: recheck the logic for 'get' in auditorium
-        /*if (ticket.getEventSchedule().getAuditorium().get(ticket.getDateTime()) == null)
-            throw new IllegalArgumentException("The date [" + ticket.getDateTime() + "] for event not available [" + ticket.getEventSchedule().getEvent() + "]");*/
+            throw new IllegalArgumentException("The date [" + ticket.getDateTime() + "] for event not available [" + ticket.getEventSchedule().getEvent() + "]");
 
         if (ticketDao.getTicketsByEvent(ticket.getEventSchedule()).stream()
                 .anyMatch(storeTicket -> storeTicket.getSeat().equals(ticket.getSeat())))

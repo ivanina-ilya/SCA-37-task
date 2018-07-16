@@ -5,8 +5,10 @@ import org.springframework.lang.NonNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.logging.Logger;
 
 public class Ticket extends DomainObject implements Comparable<Ticket> {
+    final static Logger logger = Logger.getLogger(Ticket.class.getName());
 
     private User user;
 
@@ -17,13 +19,13 @@ public class Ticket extends DomainObject implements Comparable<Ticket> {
 
     private BigDecimal price;
 
-    public Ticket(User user, EventSchedule eventSchedule, Long seat) {
+    public Ticket(@NonNull User user, @NonNull EventSchedule eventSchedule, Long seat) {
         this.user = user;
         this.eventSchedule = eventSchedule;
         this.seat = seat;
     }
 
-    public Ticket(Long id, User user, EventSchedule eventSchedule, Long seat, BigDecimal price) {
+    public Ticket(Long id, @NonNull User user, @NonNull EventSchedule eventSchedule, Long seat, BigDecimal price) {
         this.setId(id);
         this.user = user;
         this.eventSchedule = eventSchedule;
@@ -76,14 +78,15 @@ public class Ticket extends DomainObject implements Comparable<Ticket> {
         Ticket ticket = (Ticket) o;
 
         if (user != null ? !user.equals(ticket.user) : ticket.user != null) return false;
-        if (!eventSchedule.equals(ticket.eventSchedule)) return false;
+        if (eventSchedule != null && !eventSchedule.equals(ticket.eventSchedule)) return false;
         return seat != null ? seat.equals(ticket.seat) : ticket.seat == null;
     }
 
     @Override
     public int hashCode() {
+
         int result = user != null ? user.hashCode() : 0;
-        result = 31 * result + eventSchedule.hashCode();
+        result = 31 * result + (eventSchedule != null ? eventSchedule.hashCode() : 0); //eventSchedule.hashCode();
         result = 31 * result + (seat != null ? seat.hashCode() : 0);
         return result;
     }

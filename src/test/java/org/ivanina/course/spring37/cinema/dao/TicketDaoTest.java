@@ -22,6 +22,7 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.NavigableSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
@@ -31,6 +32,9 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration(classes = {SpringAppConfig.class, JdbcConfig.class, WebAppConfig.class})
 @WebAppConfiguration
 public class TicketDaoTest {
+    final static Logger logger = Logger.getLogger(TicketDaoTest.class.getName());
+
+
     @Autowired
     @Qualifier("ticketDao")
     private TicketDao ticketDao;
@@ -51,21 +55,21 @@ public class TicketDaoTest {
     @Qualifier("auditoriumDao")
     private AuditoriumDao auditoriumDao;
 
-    User user;
-    Event event;
-    Auditorium auditorium ;
-    EventSchedule eventSchedule;
-
+    private User user;
+    private Event event;
+    private Auditorium auditorium ;
+    private EventSchedule eventSchedule;
 
 
     @Before
     public void before(){
-        user = userDao.get(1L);
-        event = eventDao.get(1L);
-        auditorium = auditoriumDao.get(1L);
+        user = userDao.getAll().stream().findFirst().get();
+        event = eventDao.getAll().stream().findFirst().get();
+        auditorium = auditoriumDao.getAll().stream().findFirst().get();
 
         eventSchedule = new EventSchedule(event, auditorium, LocalDateTime.now().plusDays(1L));
         eventScheduleDao.save(eventSchedule);
+
     }
 
     @After
@@ -75,8 +79,8 @@ public class TicketDaoTest {
 
     @Test
     public void addTicketTest(){
-        Set<Ticket> ticketSet = ticketDao.getAll();
-        int cnt = ticketSet == null ? 0 : ticketSet.size();
+        Long cnt = ticketDao.getCount();
+        if(cnt == null) cnt = 0L;
 
         Ticket ticket = new Ticket(null, user, eventSchedule, 5L,
                 new BigDecimal(55.55).setScale(2, RoundingMode.HALF_UP));
@@ -85,17 +89,17 @@ public class TicketDaoTest {
         assertNotNull(id);
         assertNotEquals(new Long(0), id);
 
-        assertEquals(cnt+1, ticketDao.getAll().size());
+        assertEquals(cnt+1, ticketDao.getCount().longValue() );
 
         ticketDao.remove(ticket);
 
-        assertEquals(cnt, ticketDao.getAll().size());
+        assertEquals(cnt, ticketDao.getCount());
         assertNull(ticket.getId());
     }
 
     @Test
-    @Ignore
     public void getTicketsByUser(){
+
         NavigableSet<Ticket> tickets = ticketDao.getTicketsByUser(user.getId());
         int cnt = tickets == null ? 0 : tickets.size();
 

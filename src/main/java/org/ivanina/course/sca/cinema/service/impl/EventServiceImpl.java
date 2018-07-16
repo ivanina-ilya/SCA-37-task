@@ -2,6 +2,7 @@ package org.ivanina.course.sca.cinema.service.impl;
 
 import org.ivanina.course.sca.cinema.dao.AuditoriumDao;
 import org.ivanina.course.sca.cinema.dao.EventDao;
+import org.ivanina.course.sca.cinema.dao.EventScheduleDao;
 import org.ivanina.course.sca.cinema.domain.Event;
 import org.ivanina.course.sca.cinema.domain.EventSchedule;
 import org.ivanina.course.sca.cinema.service.EventService;
@@ -20,6 +21,10 @@ public class EventServiceImpl implements EventService {
     private EventDao eventDao;
 
     @Autowired
+    @Qualifier("eventScheduleDao")
+    private EventScheduleDao eventScheduleDao;
+
+    @Autowired
     @Qualifier("auditoriumDao")
     private AuditoriumDao auditoriumDao;
 
@@ -34,6 +39,11 @@ public class EventServiceImpl implements EventService {
     @Override
     public Set<Event> getAll() {
         return eventDao.getAll();
+    }
+
+    @Override
+    public Long getCount() {
+        return eventDao.getCount();
     }
 
     @Override
@@ -71,5 +81,32 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventSchedule createEventSchedule(Long eventId, Long auditoriumId, LocalDateTime dateTime) {
         return new EventSchedule( eventDao.get(eventId), auditoriumDao.get(auditoriumId), dateTime );
+    }
+
+    @Override
+    public Long saveEventSchedule(EventSchedule eventSchedule) {
+        return eventScheduleDao.save(eventSchedule);
+    }
+
+    @Override
+    public Boolean removeEventSchedule(EventSchedule eventSchedule) {
+        return eventScheduleDao.remove(eventSchedule);
+    }
+
+    @Override
+    public Set<LocalDateTime> getAvailableEventDate(Event event) {
+        return eventScheduleDao.getAvailableEventSchedule().stream()
+                .filter(eventSchedule -> eventSchedule.getEvent() != null && eventSchedule.getEvent().equals(event))
+                .filter(eventSchedule -> eventSchedule.getStartDateTime().isAfter(LocalDateTime.now()))
+                .map(EventSchedule::getStartDateTime)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<LocalDateTime> getAvailableEventSchedule() {
+        return eventScheduleDao.getAvailableEventSchedule().stream()
+                .filter(eventSchedule -> eventSchedule.getStartDateTime().isAfter(LocalDateTime.now()))
+                .map(EventSchedule::getStartDateTime)
+                .collect(Collectors.toSet());
     }
 }

@@ -3,6 +3,7 @@ package org.ivanina.course.sca.cinema.service.impl;
 import org.apache.log4j.Logger;
 import org.ivanina.course.sca.cinema.domain.EventSchedule;
 import org.ivanina.course.sca.cinema.domain.User;
+import org.ivanina.course.sca.cinema.service.Discount;
 import org.ivanina.course.sca.cinema.service.DiscountService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
@@ -10,6 +11,7 @@ import org.springframework.lang.Nullable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
@@ -36,34 +38,36 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
-    public byte getDiscount(@Nullable User user, EventSchedule eventSchedule, long numberOfTickets) {
-        Set<Byte> discountList = new HashSet<>();
+    public Discount getDiscount(@Nullable User user, EventSchedule eventSchedule, long numberOfTickets) {
+        Set<Discount> discountList = new HashSet<>();
 
         if(discountByLucky > 0 && isLuckyWinnerDiscount()) {
             log.info("<<< YOU WINN!!! >>>");
-            return discountByLucky;
+            return new Discount( discountByLucky,true,false,false);
         }
 
         discountList.add(getDiscountByBirthday(user, eventSchedule.getStartDateTime()));
         discountList.add(getDiscountByCount(user, numberOfTickets));
 
-        return discountList.stream().max(Byte::compareTo).orElse((byte) 0);
+        return discountList.stream()
+                .filter(Objects::nonNull)
+                .max(Discount::compareTo).orElse( new Discount( (byte) 0,false,false,false) ) ;
     }
 
     @Override
-    public byte getDiscountByBirthday(@Nullable User user, LocalDateTime airDateTime) {
+    public Discount getDiscountByBirthday(@Nullable User user, LocalDateTime airDateTime) {
         if (user != null && user.getBirthday() != null &&
                 user.getBirthday().isAfter(airDateTime.toLocalDate().minusDays(discountBirthdayInterval)) &&
                 user.getBirthday().isBefore(airDateTime.toLocalDate().plusDays(discountBirthdayInterval)))
-            return discountByBirthday;
-        return 0;
+            return new Discount( discountByBirthday,false,true,false);
+        return null;
     }
 
     @Override
-    public byte getDiscountByCount(@Nullable User user, long numberOfTickets) {
+    public Discount getDiscountByCount(@Nullable User user, long numberOfTickets) {
         if (numberOfTickets >= discountCountLimit || (user != null && (user.getTickets().size() + 1) % discountCountLimit == 0))
-            return discountByCount;
-        return 0;
+            return new Discount( discountByCount,false,false,true);
+        return null;
     }
 
     @Override

@@ -18,9 +18,9 @@ public interface DiscountService {
      * @param numberOfTickets Number of tickets that user buys
      * @return discount value from 0 to 100
      */
-    byte getDiscount(@Nullable User user, @NonNull EventSchedule eventSchedule, long numberOfTickets);
-    byte getDiscountByBirthday(@Nullable User user, LocalDateTime startDateTime);
-    byte getDiscountByCount(@Nullable User user, long numberOfTickets);
+    Discount getDiscount(@Nullable User user, @NonNull EventSchedule eventSchedule, long numberOfTickets);
+    Discount getDiscountByBirthday(@Nullable User user, LocalDateTime startDateTime);
+    Discount getDiscountByCount(@Nullable User user, long numberOfTickets);
     Boolean isLuckyWinnerDiscount();
     BigDecimal calculatePrice(BigDecimal price, byte discount);
 }

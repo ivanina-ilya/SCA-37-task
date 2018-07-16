@@ -74,6 +74,10 @@ public class AuditoriumDaoImpl implements AuditoriumDao {
                 }));
     }
 
+    @Override
+    public Long getCount() {
+        return jdbcTemplate.queryForObject("SELECT count(*) FROM "+ table, new Object[]{}, Long.class) ;
+    }
 
     @Override
     public Long save(Auditorium entity) {

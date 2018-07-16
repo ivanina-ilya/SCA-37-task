@@ -18,4 +18,12 @@ public interface EventService extends Dao<Event> {
     Set<Event> getAllFull();
 
     EventSchedule createEventSchedule(Long eventId, Long auditoriumId, LocalDateTime dateTime);
+
+    Long saveEventSchedule(EventSchedule eventSchedule);
+
+    Boolean removeEventSchedule(EventSchedule eventSchedule);
+
+    Set<LocalDateTime> getAvailableEventDate(Event event);
+
+    Set<LocalDateTime> getAvailableEventSchedule();
 }

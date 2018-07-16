@@ -39,6 +39,11 @@ public class EventScheduleDaoImpl implements EventScheduleDao {
     }
 
     @Override
+    public Long getCount() {
+        return jdbcTemplate.queryForObject("SELECT count(*) FROM "+ table, new Object[]{}, Long.class) ;
+    }
+
+    @Override
     public EventSchedule get(Long id) {
         try {
             EventSchedule eventSchedule = jdbcTemplate.queryForObject(

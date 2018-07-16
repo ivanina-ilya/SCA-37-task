@@ -26,6 +26,11 @@ public class AuditoriumServiceImpl implements AuditoriumService {
     }
 
     @Override
+    public Long getCount() {
+        return auditoriumDao.getCount();
+    }
+
+    @Override
     public Auditorium get(Long id) {
         return auditoriumDao.get(id);
     }

@@ -73,7 +73,6 @@ public class JdbcConfig {
         return new UserDaoImpl();
     }
 
-
     @Bean(name = "eventDao")
     public EventDao eventDao() {
         return new EventDaoImpl();

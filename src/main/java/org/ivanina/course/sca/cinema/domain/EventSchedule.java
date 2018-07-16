@@ -1,8 +1,11 @@
 package org.ivanina.course.sca.cinema.domain;
 
 import java.time.LocalDateTime;
+import java.util.logging.Logger;
 
 public class EventSchedule extends DomainObject {
+    final static Logger logger = Logger.getLogger(EventSchedule.class.getName());
+
     private Event event;
     private Auditorium auditorium;
     private LocalDateTime startDateTime;

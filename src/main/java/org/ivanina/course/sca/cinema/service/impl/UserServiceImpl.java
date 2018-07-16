@@ -35,6 +35,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Long getCount() {
+        return userDao.getCount();
+    }
+
+
+    @Override
     public User get(Long id) {
         return userDao.get(id);
     }
