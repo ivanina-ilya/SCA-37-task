@@ -35,14 +35,7 @@ public class EventScheduleDaoImpl implements EventScheduleDao {
 
     @Override
     public Set<EventSchedule> getAll() {
-        return new HashSet<>(jdbcTemplate.query("SELECT * FROM  " + table,
-                new RowMapper<EventSchedule>() {
-                    @Nullable
-                    @Override
-                    public EventSchedule mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return mapRow2(resultSet);
-                    }
-                }));
+        return getSet("SELECT * FROM  " + table, new Object[]{});
     }
 
     @Override
@@ -67,15 +60,12 @@ public class EventScheduleDaoImpl implements EventScheduleDao {
 
     @Override
     public Set<EventSchedule> getEventScheduleByEvent(Long eventId) {
-        return new HashSet<>(jdbcTemplate.query("SELECT * FROM  " + table + " WHERE event_id=? ",
-                new Object[]{eventId},
-                new RowMapper<EventSchedule>() {
-                    @Nullable
-                    @Override
-                    public EventSchedule mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return mapRow2(resultSet);
-                    }
-                }));
+        return getSet("SELECT * FROM  " + table + " WHERE event_id=? ", new Object[]{eventId});
+    }
+
+    @Override
+    public Set<EventSchedule> getAvailableEventSchedule() {
+        return getSet("SELECT * FROM  " + table + " WHERE startDateTime > NOW() ", new Object[]{});
     }
 
     @Override
@@ -91,7 +81,7 @@ public class EventScheduleDaoImpl implements EventScheduleDao {
                 );
                 statement.setLong(1, entity.getEvent().getId());
                 statement.setLong(2, entity.getAuditorium().getId());
-                Util.statementSetDateTimeOrNull(statement, 4, entity.getStartDateTime());
+                Util.statementSetDateTimeOrNull(statement, 3, entity.getStartDateTime());
 
                 return statement;
             }, holder);
@@ -142,6 +132,18 @@ public class EventScheduleDaoImpl implements EventScheduleDao {
         Util.localDateTimeParse(resultSet.getString("startDateTime"));
 
         return eventSchedule;
+    }
+
+    private Set<EventSchedule> getSet(String sql, Object[] args){
+        return new HashSet<>(jdbcTemplate.query(sql,
+                args,
+                new RowMapper<EventSchedule>() {
+                    @Nullable
+                    @Override
+                    public EventSchedule mapRow(ResultSet resultSet, int i) throws SQLException {
+                        return mapRow2(resultSet);
+                    }
+                }));
     }
 
 }

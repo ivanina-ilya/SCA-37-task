@@ -1,12 +1,15 @@
 package org.ivanina.course.sca.cinema.service.impl;
 
+import org.ivanina.course.sca.cinema.dao.AuditoriumDao;
 import org.ivanina.course.sca.cinema.dao.EventDao;
 import org.ivanina.course.sca.cinema.domain.Event;
+import org.ivanina.course.sca.cinema.domain.EventSchedule;
 import org.ivanina.course.sca.cinema.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,6 +18,10 @@ public class EventServiceImpl implements EventService {
     @Autowired
     @Qualifier("eventDao")
     private EventDao eventDao;
+
+    @Autowired
+    @Qualifier("auditoriumDao")
+    private AuditoriumDao auditoriumDao;
 
 
     @Nullable
@@ -59,5 +66,10 @@ public class EventServiceImpl implements EventService {
     @Override
     public Long getNextIncrement() {
         return null;
+    }
+
+    @Override
+    public EventSchedule createEventSchedule(Long eventId, Long auditoriumId, LocalDateTime dateTime) {
+        return new EventSchedule( eventDao.get(eventId), auditoriumDao.get(auditoriumId), dateTime );
     }
 }

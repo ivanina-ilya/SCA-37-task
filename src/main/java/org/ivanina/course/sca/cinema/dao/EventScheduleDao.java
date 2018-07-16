@@ -6,4 +6,6 @@ import java.util.Set;
 
 public interface EventScheduleDao extends Dao<EventSchedule> {
     Set<EventSchedule> getEventScheduleByEvent(Long eventId);
+
+    Set<EventSchedule> getAvailableEventSchedule();
 }

@@ -106,8 +106,6 @@ public class TicketDaoImpl implements TicketDao {
                     @Override
                     public Ticket mapRow(ResultSet resultSet, int i) throws SQLException {
                         if (resultSet == null) return null;
-                        User user = userDao.get(resultSet.getLong("user_id"));
-                        Event event = eventDao.get(resultSet.getLong("event_id"));
                         return getTicket(resultSet);
                     }
                 }));
@@ -141,13 +139,13 @@ public class TicketDaoImpl implements TicketDao {
             GeneratedKeyHolder holder = new GeneratedKeyHolder();
             rows = jdbcTemplate.update(connection -> {
                 PreparedStatement statement = connection.prepareStatement(
-                        "INSERT INTO " + table + " (user_id, eventSchedule_id, seat, price) VALUES (?,?,?,?,?)",
+                        "INSERT INTO " + table + " (user_id, eventSchedule_id, seat, price) VALUES (?,?,?,?)",
                         Statement.RETURN_GENERATED_KEYS
                 );
                 Util.statementSetLongOrNull(statement, 1, entity.getUser() != null ? entity.getUser().getId() : null);
                 Util.statementSetLongOrNull(statement, 2, entity.getEventSchedule().getId());
-                Util.statementSetLongOrNull(statement, 4, entity.getSeat());
-                Util.statementSetBigDecimalOrNull(statement, 5, entity.getPrice());
+                Util.statementSetLongOrNull(statement, 3, entity.getSeat());
+                Util.statementSetBigDecimalOrNull(statement, 4, entity.getPrice());
                 return statement;
             }, holder);
             entity.setId(holder.getKey().longValue());
