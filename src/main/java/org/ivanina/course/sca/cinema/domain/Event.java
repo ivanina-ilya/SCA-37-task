@@ -3,7 +3,6 @@ package org.ivanina.course.sca.cinema.domain;
 import org.springframework.lang.NonNull;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 
 public class Event extends DomainObject {
     @NonNull

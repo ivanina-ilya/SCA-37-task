@@ -14,7 +14,7 @@
     <#list model["usersList"] as user >
         <tr>
             <td>${user.email}</td>
-            <td>${user.firstName} ${user.lastName}</td>
+            <td><a href="/user/view/${user.getId()}">${user.firstName} ${user.lastName}</a></td>
         </tr>
     </#list>
 </table>

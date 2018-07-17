@@ -12,4 +12,10 @@ public interface TicketDao extends Dao<Ticket> {
     NavigableSet<Ticket> getTicketsByUserForEvent(User user, EventSchedule eventSchedule);
 
     NavigableSet<Ticket> getTicketsByEvent(EventSchedule eventSchedule);
+
+    Ticket getPreBookingTicket(Long id);
+
+    Long preBookSave(Ticket ticket);
+
+    Boolean removePreBookingTicket(Ticket ticket);
 }

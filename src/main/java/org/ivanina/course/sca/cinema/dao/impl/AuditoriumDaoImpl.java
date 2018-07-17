@@ -2,6 +2,7 @@ package org.ivanina.course.sca.cinema.dao.impl;
 
 import org.ivanina.course.sca.cinema.dao.AuditoriumDao;
 import org.ivanina.course.sca.cinema.domain.Auditorium;
+import org.ivanina.course.sca.cinema.domain.EventSchedule;
 import org.ivanina.course.sca.cinema.service.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -26,17 +27,20 @@ public class AuditoriumDaoImpl implements AuditoriumDao {
     @Override
     public Auditorium getByName(String name) {
         try {
-            return jdbcTemplate.queryForObject(
+            return getSet("SELECT * FROM " + table + " WHERE name=?",
+                    new Object[]{name})
+                    .stream().findFirst().orElse(null);
+            /*return jdbcTemplate.queryForObject(
                     "SELECT * FROM " + table + " WHERE name=?",
                     new Object[]{name},
                     new RowMapper<Auditorium>() {
                         @Nullable
                         @Override
                         public Auditorium mapRow(ResultSet resultSet, int i) throws SQLException {
-                            return AuditoriumDaoImpl.mapRow(resultSet);
+                            return mapRow(resultSet);
                         }
                     }
-            );
+            );*/
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -45,17 +49,19 @@ public class AuditoriumDaoImpl implements AuditoriumDao {
     @Override
     public Auditorium get(Long auditoriumId) {
         try {
-            return jdbcTemplate.queryForObject(
+            return getSet("SELECT * FROM " + table + " WHERE id=?",
+                    new Object[]{auditoriumId}).stream().findFirst().get();
+            /*return jdbcTemplate.queryForObject(
                     "SELECT * FROM " + table + " WHERE id=?",
                     new Object[]{auditoriumId},
                     new RowMapper<Auditorium>() {
                         @Nullable
                         @Override
                         public Auditorium mapRow(ResultSet resultSet, int i) throws SQLException {
-                            return AuditoriumDaoImpl.mapRow(resultSet);
+                            return mapRow(resultSet);
                         }
                     }
-            );
+            );*/
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -64,14 +70,15 @@ public class AuditoriumDaoImpl implements AuditoriumDao {
 
     @Override
     public Set<Auditorium> getAll() {
-        return new HashSet<>(jdbcTemplate.query("SELECT * FROM  " + table,
+        return getSet("SELECT * FROM  " + table, new Object[]{});
+        /*return new HashSet<>(jdbcTemplate.query("SELECT * FROM  " + table,
                 new RowMapper<Auditorium>() {
                     @Nullable
                     @Override
                     public Auditorium mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return AuditoriumDaoImpl.mapRow(resultSet);
+                        return mapRow(resultSet);
                     }
-                }));
+                }));*/
     }
 
     @Override
@@ -126,11 +133,25 @@ public class AuditoriumDaoImpl implements AuditoriumDao {
     }
 
 
-    public static Auditorium mapRow(ResultSet resultSet) throws SQLException {
-        return mapRow(resultSet, new Auditorium(""));
+    @Override
+    public Set<Long> getReservedSeats(EventSchedule eventSchedule) {
+        return new HashSet<>(jdbcTemplate.query("SELECT SEAT FROM TICKETS WHERE EVENTSCHEDULE_ID=?",
+                new Object[]{eventSchedule.getId()},
+                new RowMapper<Long>() {
+                    @Nullable
+                    @Override
+                    public Long mapRow(ResultSet resultSet, int i) throws SQLException {
+                        return resultSet.getLong("SEAT");
+                    }
+                }));
     }
 
-    public static Auditorium mapRow(ResultSet resultSet, Auditorium auditorium) throws SQLException {
+
+    public Auditorium mapRow2(ResultSet resultSet) throws SQLException {
+        return mapRow(resultSet, null);
+    }
+
+    public Auditorium mapRow(ResultSet resultSet, Auditorium auditorium) throws SQLException {
         if (resultSet == null) return null;
         if (auditorium == null) auditorium = new Auditorium("");
 
@@ -142,4 +163,18 @@ public class AuditoriumDaoImpl implements AuditoriumDao {
                 null);
         return auditorium;
     }
+
+    private Set<Auditorium> getSet(String sql, Object[] args){
+        return new HashSet<>(jdbcTemplate.query(sql,
+                args,
+                new RowMapper<Auditorium>() {
+                    @Nullable
+                    @Override
+                    public Auditorium mapRow(ResultSet resultSet, int i) throws SQLException {
+                        return mapRow2(resultSet);
+                    }
+                }));
+    }
+
+
 }

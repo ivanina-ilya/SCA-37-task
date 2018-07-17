@@ -1,5 +1,6 @@
 package org.ivanina.course.sca.cinema.service.impl;
 
+import org.ivanina.course.sca.cinema.dao.AuditoriumDao;
 import org.ivanina.course.sca.cinema.dao.TicketDao;
 import org.ivanina.course.sca.cinema.domain.*;
 import org.ivanina.course.sca.cinema.service.BookingService;
@@ -16,9 +17,9 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 public class BookingServiceImpl implements BookingService {
     @Autowired
@@ -36,6 +37,10 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     @Qualifier("ticketDao")
     private TicketDao ticketDao;
+
+    @Autowired
+    @Qualifier("auditoriumDao")
+    private AuditoriumDao auditoriumDao;
 
 
     @Override
@@ -129,6 +134,15 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public Ticket preBookTicket(@Nullable User user, @NonNull EventSchedule eventSchedule, @NonNull Long seat, BigDecimal price){
+        Ticket ticket = new Ticket(user, eventSchedule, seat);
+        ticket.setPrice(price);
+        purchaseValidate(ticket);
+        ticket.setId(ticketDao.preBookSave(ticket));
+        return ticket;
+    }
+
+    @Override
     public Boolean purchaseValidate(Ticket ticket) {
         Event event = eventService.get(ticket.getEventSchedule().getEvent().getId());
         if (event == null)
@@ -144,6 +158,27 @@ public class BookingServiceImpl implements BookingService {
         return true;
     }
 
+    @Override
+    public Ticket convertPreBookingToTicket(Long preBookingTicketId) {
+        return convertPreBookingToTicket( ticketDao.getPreBookingTicket(preBookingTicketId) );
+    }
+
+    @Override
+    public Ticket convertPreBookingToTicket(Ticket preBookingTicket) {
+        Ticket ticket = null;
+        if(purchaseValidate(preBookingTicket)){
+            ticket = new Ticket(
+                    null,
+                    preBookingTicket.getUser(),
+                    preBookingTicket.getEventSchedule(),
+                    preBookingTicket.getSeat(),
+                    preBookingTicket.getPrice()
+            );
+            ticket.setId(ticketDao.save(ticket));
+            ticketDao.removePreBookingTicket(preBookingTicket);
+        }
+        return ticket;
+    }
 
     @Override
     public Set<Ticket> getPurchasedTicketsForUser(User user) {
@@ -152,18 +187,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Set<Long> getAvailableSeats(EventSchedule eventSchedule) {
-        Auditorium auditorium = eventSchedule.getAuditorium();
-        if (auditorium == null)
-            throw new IllegalArgumentException("No Auditorium assigned");
-        Set<Ticket> tickets = getPurchasedTicketsForEvent(eventSchedule);
-        if (tickets == null || tickets.size() == 0) return auditorium.getSeatsSet();
-
-        List<Long> boughSeats = tickets.stream()
-                .map(Ticket::getSeat)
-                .collect(Collectors.toList());
-
-        return auditorium.getSeatsSet().stream()
-                .filter(seat -> !boughSeats.contains(seat))
+        Set<Long> reservedSeats = auditoriumDao.getReservedSeats(eventSchedule);
+        return LongStream.rangeClosed(1, eventSchedule.getAuditorium().getSeats()).boxed()
+                .filter(seat -> !reservedSeats.contains(seat))
                 .collect(Collectors.toSet());
     }
 

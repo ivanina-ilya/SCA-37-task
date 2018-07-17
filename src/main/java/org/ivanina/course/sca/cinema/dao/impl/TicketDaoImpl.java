@@ -4,7 +4,6 @@ import org.ivanina.course.sca.cinema.dao.EventDao;
 import org.ivanina.course.sca.cinema.dao.EventScheduleDao;
 import org.ivanina.course.sca.cinema.dao.TicketDao;
 import org.ivanina.course.sca.cinema.dao.UserDao;
-import org.ivanina.course.sca.cinema.domain.Event;
 import org.ivanina.course.sca.cinema.domain.EventSchedule;
 import org.ivanina.course.sca.cinema.domain.Ticket;
 import org.ivanina.course.sca.cinema.domain.User;
@@ -22,11 +21,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class TicketDaoImpl implements TicketDao {
     private String table = "Tickets";
+    private String tablePreSave = "TICKETS_PREBOOK";
     private String tableUser = "Users";
 
     @Autowired
@@ -118,6 +119,15 @@ public class TicketDaoImpl implements TicketDao {
 
     @Override
     public Ticket get(Long id) {
+        return get(id, table);
+    }
+
+    @Override
+    public Ticket getPreBookingTicket(Long id) {
+        return get(id, tablePreSave);
+    }
+
+    public Ticket get(Long id, String table) {
         try {
             return jdbcTemplate.queryForObject(
                     "SELECT * FROM " + table + " WHERE id=?",
@@ -138,19 +148,29 @@ public class TicketDaoImpl implements TicketDao {
 
     @Override
     public Long save(Ticket entity) {
+        return save(entity, table);
+    }
+
+    @Override
+    public Long preBookSave(Ticket ticket) {
+        return save(ticket, tablePreSave);
+    }
+
+    private Long save(Ticket entity, String table) {
         int rows = 0;
         if (entity.getId() == null) {
 
             GeneratedKeyHolder holder = new GeneratedKeyHolder();
             rows = jdbcTemplate.update(connection -> {
                 PreparedStatement statement = connection.prepareStatement(
-                        "INSERT INTO " + table + " (user_id, eventSchedule_id, seat, price) VALUES (?,?,?,?)",
+                        "INSERT INTO " + table + " (user_id, eventSchedule_id, seat, price, added) VALUES (?,?,?,?,?)",
                         Statement.RETURN_GENERATED_KEYS
                 );
                 Util.statementSetLongOrNull(statement, 1, entity.getUser() != null ? entity.getUser().getId() : null);
                 Util.statementSetLongOrNull(statement, 2, entity.getEventSchedule().getId());
                 Util.statementSetLongOrNull(statement, 3, entity.getSeat());
                 Util.statementSetBigDecimalOrNull(statement, 4, entity.getPrice());
+                Util.statementSetDateTimeOrNull(statement, 5, LocalDateTime.now());
                 return statement;
             }, holder);
             entity.setId(holder.getKey().longValue());
@@ -183,8 +203,17 @@ public class TicketDaoImpl implements TicketDao {
 
     @Override
     public Boolean remove(Long id) {
+        return remove(id, table);
+    }
+
+    private Boolean remove(Long id, String table){
         int rows = jdbcTemplate.update("DELETE FROM " + table + " WHERE id = ? ", id);
         return rows == 0 ? false : true;
+    }
+
+    @Override
+    public Boolean removePreBookingTicket(Ticket ticket) {
+        return remove(ticket.getId(), tablePreSave);
     }
 
     @Override

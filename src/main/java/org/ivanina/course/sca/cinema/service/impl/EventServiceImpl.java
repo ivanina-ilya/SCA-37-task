@@ -103,10 +103,36 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Set<LocalDateTime> getAvailableEventSchedule() {
+    public Set<EventSchedule> getAvailableEventSchedule() {
         return eventScheduleDao.getAvailableEventSchedule().stream()
                 .filter(eventSchedule -> eventSchedule.getStartDateTime().isAfter(LocalDateTime.now()))
-                .map(EventSchedule::getStartDateTime)
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Event> getAvailableEvents() {
+        return getAvailableEventSchedule().stream()
+                .map(EventSchedule::getEvent)
+                .distinct()
+                .collect(Collectors.toSet());
+    }
+
+    public Set<EventSchedule> getArchiveEventSchedule() {
+        return eventScheduleDao.getAvailableEventSchedule().stream()
+                .filter(eventSchedule -> eventSchedule.getStartDateTime().isBefore(LocalDateTime.now()))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Event> getArchiveEvents() {
+        return getArchiveEventSchedule().stream()
+                .map(EventSchedule::getEvent)
+                .distinct()
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public EventSchedule getEventSchedule(Long id) {
+        return eventScheduleDao.get(id);
     }
 }

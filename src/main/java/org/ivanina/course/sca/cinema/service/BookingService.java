@@ -24,6 +24,8 @@ public interface BookingService {
 
     Ticket bookTicket(@Nullable String userEmail, @NonNull EventSchedule eventSchedule, @NonNull Long seat);
 
+    Ticket preBookTicket(@Nullable User user, @NonNull EventSchedule eventSchedule, @NonNull Long seat, BigDecimal price);
+
     Set<Ticket> getPurchasedTicketsForEvent(@NonNull EventSchedule eventSchedule);
 
     Set<Ticket> getPurchasedTicketsForUser(@NonNull User user);
@@ -41,4 +43,9 @@ public interface BookingService {
     Boolean isAvailableSeats(@NonNull Event event, @NonNull LocalDateTime dateTime, @NonNull Auditorium auditorium, Long seat);
 
     Boolean isAvailableSeats(@NonNull EventSchedule eventSchedule, Long seat);
+
+    Ticket convertPreBookingToTicket(Ticket preBookingTicket);
+
+    Ticket convertPreBookingToTicket(Long preBookingTicketId);
+
 }

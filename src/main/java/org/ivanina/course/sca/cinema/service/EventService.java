@@ -5,7 +5,6 @@ import org.ivanina.course.sca.cinema.domain.Event;
 import org.ivanina.course.sca.cinema.domain.EventSchedule;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -25,5 +24,11 @@ public interface EventService extends Dao<Event> {
 
     Set<LocalDateTime> getAvailableEventDate(Event event);
 
-    Set<LocalDateTime> getAvailableEventSchedule();
+    Set<EventSchedule> getAvailableEventSchedule();
+
+    Set<Event> getAvailableEvents();
+
+    Set<Event> getArchiveEvents();
+
+    EventSchedule getEventSchedule(Long id);
 }
