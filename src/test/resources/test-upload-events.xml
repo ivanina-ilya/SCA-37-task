@@ -1,0 +1,11 @@
+<wrapper>
+	<events>
+		<events>
+			<id></id>
+			<name>TEST UPLOAD EVENT</name>
+			<price>999.99</price>
+			<duration>7200</duration>
+			<rating>HIGH</rating>
+		</events>
+	</events>
+</wrapper>

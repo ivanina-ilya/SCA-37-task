@@ -5,6 +5,7 @@
     <title>User Tickets</title>
 </head>
 <body>
+<a href="/">Home</a>
 <h3>Tickets for <a href="/user/view/${user.getId()}">${user.getFirstName()} ${user.getLastName()}</a></h3>
 <table class="datatable">
     <tr>

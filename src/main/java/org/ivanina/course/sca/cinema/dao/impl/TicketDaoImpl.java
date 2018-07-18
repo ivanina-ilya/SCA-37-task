@@ -7,7 +7,7 @@ import org.ivanina.course.sca.cinema.dao.UserDao;
 import org.ivanina.course.sca.cinema.domain.EventSchedule;
 import org.ivanina.course.sca.cinema.domain.Ticket;
 import org.ivanina.course.sca.cinema.domain.User;
-import org.ivanina.course.sca.cinema.service.Util;
+import org.ivanina.course.sca.cinema.utils.ServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -166,11 +166,11 @@ public class TicketDaoImpl implements TicketDao {
                         "INSERT INTO " + table + " (user_id, eventSchedule_id, seat, price, added) VALUES (?,?,?,?,?)",
                         Statement.RETURN_GENERATED_KEYS
                 );
-                Util.statementSetLongOrNull(statement, 1, entity.getUser() != null ? entity.getUser().getId() : null);
-                Util.statementSetLongOrNull(statement, 2, entity.getEventSchedule().getId());
-                Util.statementSetLongOrNull(statement, 3, entity.getSeat());
-                Util.statementSetBigDecimalOrNull(statement, 4, entity.getPrice());
-                Util.statementSetDateTimeOrNull(statement, 5, LocalDateTime.now());
+                ServiceUtil.statementSetLongOrNull(statement, 1, entity.getUser() != null ? entity.getUser().getId() : null);
+                ServiceUtil.statementSetLongOrNull(statement, 2, entity.getEventSchedule().getId());
+                ServiceUtil.statementSetLongOrNull(statement, 3, entity.getSeat());
+                ServiceUtil.statementSetBigDecimalOrNull(statement, 4, entity.getPrice());
+                ServiceUtil.statementSetDateTimeOrNull(statement, 5, LocalDateTime.now());
                 return statement;
             }, holder);
             entity.setId(holder.getKey().longValue());

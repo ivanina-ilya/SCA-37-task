@@ -3,7 +3,7 @@ package org.ivanina.course.sca.cinema.dao.impl;
 import org.ivanina.course.sca.cinema.dao.EventDao;
 import org.ivanina.course.sca.cinema.domain.Event;
 import org.ivanina.course.sca.cinema.domain.EventRating;
-import org.ivanina.course.sca.cinema.service.Util;
+import org.ivanina.course.sca.cinema.utils.ServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -95,9 +95,9 @@ public class EventDaoImpl  implements EventDao {
                         Statement.RETURN_GENERATED_KEYS
                 );
                 statement.setString(1, entity.getName());
-                Util.statementSetStringOrNull(statement, 2, entity.getRating() != null ? entity.getRating().name() : null);
-                Util.statementSetBigDecimalOrNull(statement, 3, entity.getPrice());
-                Util.statementSetLongOrNull(statement, 4, entity.getDuration());
+                ServiceUtil.statementSetStringOrNull(statement, 2, entity.getRating() != null ? entity.getRating().name() : null);
+                ServiceUtil.statementSetBigDecimalOrNull(statement, 3, entity.getPrice());
+                ServiceUtil.statementSetLongOrNull(statement, 4, entity.getDuration());
                 return statement;
             }, holder);
             entity.setId(holder.getKey().longValue());

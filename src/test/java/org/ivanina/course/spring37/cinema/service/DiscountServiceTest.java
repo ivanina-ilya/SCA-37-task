@@ -10,8 +10,6 @@ import org.ivanina.course.sca.cinema.domain.User;
 import org.ivanina.course.sca.cinema.service.AuditoriumService;
 import org.ivanina.course.sca.cinema.service.Discount;
 import org.ivanina.course.sca.cinema.service.DiscountService;
-import org.ivanina.course.sca.cinema.service.EventService;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

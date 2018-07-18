@@ -33,6 +33,14 @@
         <freemarker.version>2.3.28</freemarker.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>geomajas-repo</id>
+            <name>Geomajas Repository</name>
+            <url>http://maven.geomajas.org</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -69,6 +77,18 @@
             <version>${freemarker.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.3.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.6</version>
+        </dependency>
+
 
         <dependency>
             <groupId>com.h2database</groupId>
@@ -87,6 +107,19 @@
             <artifactId>log4j</artifactId>
             <version>${log4j.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>2.9.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lowagie</groupId>
+            <artifactId>itext</artifactId>
+            <version>4.2.1</version>
+        </dependency>
+
     </dependencies>
 
 

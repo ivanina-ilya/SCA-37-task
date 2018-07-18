@@ -1,20 +1,26 @@
 package org.ivanina.course.sca.cinema.domain;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.springframework.lang.NonNull;
 
 import java.math.BigDecimal;
 
 public class Event extends DomainObject {
     @NonNull
+    @JacksonXmlProperty(localName = "name")
     private String name;
 
+    @JacksonXmlProperty(localName = "price")
     private BigDecimal price;
 
+    @JacksonXmlProperty(localName = "duration")
     private Long duration;
 
+    @JacksonXmlProperty(localName = "rating")
     private EventRating rating;
 
-
+    public Event() {
+    }
 
     public Event(String name) {
         this.name = name;

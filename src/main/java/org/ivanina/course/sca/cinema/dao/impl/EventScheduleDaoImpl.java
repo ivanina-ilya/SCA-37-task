@@ -4,7 +4,7 @@ import org.ivanina.course.sca.cinema.dao.AuditoriumDao;
 import org.ivanina.course.sca.cinema.dao.EventDao;
 import org.ivanina.course.sca.cinema.dao.EventScheduleDao;
 import org.ivanina.course.sca.cinema.domain.EventSchedule;
-import org.ivanina.course.sca.cinema.service.Util;
+import org.ivanina.course.sca.cinema.utils.ServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -86,7 +86,7 @@ public class EventScheduleDaoImpl implements EventScheduleDao {
                 );
                 statement.setLong(1, entity.getEvent().getId());
                 statement.setLong(2, entity.getAuditorium().getId());
-                Util.statementSetDateTimeOrNull(statement, 3, entity.getStartDateTime());
+                ServiceUtil.statementSetDateTimeOrNull(statement, 3, entity.getStartDateTime());
 
                 return statement;
             }, holder);
@@ -131,10 +131,10 @@ public class EventScheduleDaoImpl implements EventScheduleDao {
         if (eventSchedule == null) eventSchedule = new EventSchedule(null, null, null);
         eventSchedule.setAuditorium( auditoriumDao.get( resultSet.getLong("auditorium_id") ) );
         eventSchedule.setEvent( eventDao.get(resultSet.getLong("event_id")) );
-        eventSchedule.setStartDateTime(Util.localDateTimeParse(resultSet.getString("startDateTime")));
+        eventSchedule.setStartDateTime(ServiceUtil.localDateTimeParse(resultSet.getString("startDateTime")));
         eventSchedule.setId(resultSet.getLong("id"));
 
-        Util.localDateTimeParse(resultSet.getString("startDateTime"));
+        ServiceUtil.localDateTimeParse(resultSet.getString("startDateTime"));
 
         return eventSchedule;
     }

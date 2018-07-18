@@ -5,7 +5,7 @@
     <title>List of users</title>
 </head>
 <body>
-
+<a href="/">Home</a>
 <table class="datatable">
     <tr>
         <th>Email</th>

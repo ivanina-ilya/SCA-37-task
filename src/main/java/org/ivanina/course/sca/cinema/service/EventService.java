@@ -7,6 +7,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 
@@ -31,4 +32,6 @@ public interface EventService extends Dao<Event> {
     Set<Event> getArchiveEvents();
 
     EventSchedule getEventSchedule(Long id);
+
+    void updateOrInsertEvents(@NonNull List<Event> events);
 }

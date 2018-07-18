@@ -2,7 +2,7 @@ package org.ivanina.course.sca.cinema.dao.impl;
 
 import org.ivanina.course.sca.cinema.dao.UserDao;
 import org.ivanina.course.sca.cinema.domain.User;
-import org.ivanina.course.sca.cinema.service.Util;
+import org.ivanina.course.sca.cinema.utils.ServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -91,10 +91,10 @@ public class UserDaoImpl implements UserDao {
                         "INSERT INTO " + table + " (firstName, lastName, email, birthday) VALUES (?,?,?,?)",
                         Statement.RETURN_GENERATED_KEYS
                 );
-                Util.statementSetStringOrNull(statement, 1, entity.getFirstName());
-                Util.statementSetStringOrNull(statement, 2, entity.getLastName());
-                Util.statementSetStringOrNull(statement, 3, entity.getEmail());
-                Util.statementSetDateOrNull(statement, 4, birthdayDate);
+                ServiceUtil.statementSetStringOrNull(statement, 1, entity.getFirstName());
+                ServiceUtil.statementSetStringOrNull(statement, 2, entity.getLastName());
+                ServiceUtil.statementSetStringOrNull(statement, 3, entity.getEmail());
+                ServiceUtil.statementSetDateOrNull(statement, 4, birthdayDate);
                 return statement;
             }, holder);
             entity.setId(holder.getKey().longValue());

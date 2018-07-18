@@ -1,6 +1,6 @@
 package org.ivanina.course.sca.cinema.domain;
 
-import org.ivanina.course.sca.cinema.service.Util;
+import org.ivanina.course.sca.cinema.utils.ServiceUtil;
 import org.springframework.lang.NonNull;
 
 import java.math.BigDecimal;
@@ -110,8 +110,8 @@ public class Ticket extends DomainObject implements Comparable<Ticket> {
 
     @Override
     public String toString() {
-        return "Ticket for data: " + Util.localDateTimeFormatterDay(eventSchedule.getStartDateTime()) + ", at time: " +
-                Util.localDateTimeFormatterTime(eventSchedule.getStartDateTime()) + "\n" +
+        return "Ticket for data: " + ServiceUtil.localDateTimeFormatterDay(eventSchedule.getStartDateTime()) + ", at time: " +
+                ServiceUtil.localDateTimeFormatterTime(eventSchedule.getStartDateTime()) + "\n" +
                 eventSchedule.getEvent() + "\n" +
                 "Auditorium: " + eventSchedule.getAuditorium() + "\n" +
                 "Seat: " + seat + "\n" +

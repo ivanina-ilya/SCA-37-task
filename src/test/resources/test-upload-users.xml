@@ -1,0 +1,18 @@
+<wrapper>
+	<users>
+		<users>
+			<id></id>
+			<firstName>Hana</firstName>
+			<lastName>Manana</lastName>
+			<email>h.m@test.com</email>
+			<birthday>1978-04-17</birthday>
+		</users>
+		<users>
+			<id>5</id>
+			<firstName>Upload</firstName>
+			<lastName>Test</lastName>
+			<email>upload.test@test.com</email>
+			<birthday>1994-04-20</birthday>
+		</users>
+	</users>
+</wrapper>

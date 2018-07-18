@@ -3,7 +3,7 @@ package org.ivanina.course.sca.cinema.dao.impl;
 import org.ivanina.course.sca.cinema.dao.AuditoriumDao;
 import org.ivanina.course.sca.cinema.domain.Auditorium;
 import org.ivanina.course.sca.cinema.domain.EventSchedule;
-import org.ivanina.course.sca.cinema.service.Util;
+import org.ivanina.course.sca.cinema.utils.ServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -98,8 +98,8 @@ public class AuditoriumDaoImpl implements AuditoriumDao {
                         Statement.RETURN_GENERATED_KEYS
                 );
                 statement.setString(1, entity.getName());
-                Util.statementSetLongOrNull(statement, 2, entity.getSeats());
-                Util.statementSetStringOrNull(statement, 3, entity.vipSeatsToString());
+                ServiceUtil.statementSetLongOrNull(statement, 2, entity.getSeats());
+                ServiceUtil.statementSetStringOrNull(statement, 3, entity.vipSeatsToString());
                 return statement;
             }, holder);
             entity.setId(holder.getKey().longValue());

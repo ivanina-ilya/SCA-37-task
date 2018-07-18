@@ -1,6 +1,5 @@
 package org.ivanina.course.sca.cinema.controller;
 
-import org.ivanina.course.sca.cinema.domain.Ticket;
 import org.ivanina.course.sca.cinema.domain.User;
 import org.ivanina.course.sca.cinema.service.BookingService;
 import org.ivanina.course.sca.cinema.service.UserService;
@@ -20,7 +19,7 @@ public class UserController {
     @Autowired
     private BookingService bookingService;
 
-    @GetMapping("/list")
+    @GetMapping("/list/")
     public String getIndex(@ModelAttribute("model") ModelMap model) {
         model.addAttribute("usersList", userService.getAll());
         return "user/userList";

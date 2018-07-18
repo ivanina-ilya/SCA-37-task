@@ -1,7 +1,11 @@
 package org.ivanina.course.sca.cinema.config;
 
+import org.ivanina.course.sca.cinema.model.pdf.EventsPDFView;
+import org.ivanina.course.sca.cinema.model.pdf.UsersPDFView;
 import org.ivanina.course.sca.cinema.service.*;
 import org.ivanina.course.sca.cinema.service.impl.*;
+import org.ivanina.course.sca.cinema.utils.Serializer;
+import org.ivanina.course.sca.cinema.utils.XmlSerializer;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -41,8 +45,17 @@ public class SpringAppConfig {
     }
 
     @Bean(name = "bookingService")
-    public BookingService BookingService() {
+    public BookingService bookingService() {
         return new BookingServiceImpl();
     }
+
+    @Bean(name = "serializer")
+    public Serializer xmlSerializer(){ return new XmlSerializer(); }
+
+    @Bean(name = "usersPDFView")
+    public UsersPDFView usersPDFView(){ return  new UsersPDFView(); }
+
+    @Bean(name = "eventsPDFView")
+    public EventsPDFView eventsPDFView(){ return  new EventsPDFView(); }
 
 }

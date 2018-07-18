@@ -1,5 +1,11 @@
 package org.ivanina.course.sca.cinema.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.ivanina.course.sca.cinema.utils.LocalDateDeserializer;
+import org.ivanina.course.sca.cinema.utils.LocalDateSerializer;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDate;
@@ -7,18 +13,30 @@ import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.TreeSet;
 
+
+
 public class User extends DomainObject {
     @NonNull
+    @JacksonXmlProperty(localName = "firstName")
     private String firstName;
 
+    @JacksonXmlProperty(localName = "lastName")
     private String lastName;
 
     @NonNull
+    @JacksonXmlProperty(localName = "email")
     private String email;
 
+    @JacksonXmlProperty(localName = "birthday")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate birthday;
 
+    @JsonIgnore
     private NavigableSet<Ticket> tickets = new TreeSet<>();
+
+    public User() {
+    }
 
     public User(String firstName, String email) {
         this.firstName = firstName;

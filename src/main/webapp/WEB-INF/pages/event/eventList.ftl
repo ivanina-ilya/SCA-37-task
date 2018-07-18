@@ -5,7 +5,7 @@
     <title>Event List</title>
 </head>
 <body>
-
+<a href="/">Home</a>
 <table class="datatable">
     <tr>
         <th>Event</th>

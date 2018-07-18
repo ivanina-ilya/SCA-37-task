@@ -42,4 +42,6 @@ public class ErrorController {
         return (Integer) httpRequest
                 .getAttribute("javax.servlet.error.status_code");
     }
+
+
 }

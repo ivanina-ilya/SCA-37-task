@@ -5,27 +5,23 @@ import org.ivanina.course.sca.cinema.config.SpringAppConfig;
 import org.ivanina.course.sca.cinema.config.WebAppConfig;
 import org.ivanina.course.sca.cinema.dao.*;
 import org.ivanina.course.sca.cinema.domain.*;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
-import org.junit.runners.model.InitializationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AbstractTestExecutionListener;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.NavigableSet;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)

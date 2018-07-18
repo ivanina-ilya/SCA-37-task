@@ -1,4 +1,4 @@
-package org.ivanina.course.sca.cinema.service;
+package org.ivanina.course.sca.cinema.utils;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 
-public class Util {
+public class ServiceUtil {
     public static void statementSetStringOrNull(PreparedStatement statement, int column, String val) throws SQLException {
         if (val == null) {
             statement.setNull(column, Types.VARCHAR);
@@ -71,15 +71,15 @@ public class Util {
     }
 
     public static String localDateTimeFormatterDayTime(LocalDateTime dateTime) {
-        return Util.localDateTimeFormatter(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        return ServiceUtil.localDateTimeFormatter(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     public static String localDateTimeFormatterDay(LocalDateTime dateTime) {
-        return Util.localDateTimeFormatter(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        return ServiceUtil.localDateTimeFormatter(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
     public static String localDateTimeFormatterTime(LocalDateTime dateTime) {
-        return Util.localDateTimeFormatter(dateTime, DateTimeFormatter.ofPattern("HH:mm:ss"));
+        return ServiceUtil.localDateTimeFormatter(dateTime, DateTimeFormatter.ofPattern("HH:mm:ss"));
     }
 
     public static String localDateTimeFormatter(LocalDateTime dateTime, DateTimeFormatter formatter) {

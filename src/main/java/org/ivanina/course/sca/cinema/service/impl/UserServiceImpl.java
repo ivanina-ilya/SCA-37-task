@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
 
+import java.util.List;
 import java.util.Set;
 
 public class UserServiceImpl implements UserService {
@@ -58,5 +59,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long getNextIncrement() {
         return null;
+    }
+
+    @Override
+    public void updateOrInsertUsers(List<User> users) {
+        users.forEach(user -> {
+            if(user.getId() != null && userDao.get(user.getId()) == null){
+                user.setId(null);
+            }
+            userDao.save(user);
+        });
     }
 }

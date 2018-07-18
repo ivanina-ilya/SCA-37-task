@@ -5,7 +5,7 @@
     <title>Book the event</title>
 </head>
 <body>
-
+<a href="/">Home</a>
 <form method="post">
 
     <p>Event: ${eventSchedule.getEvent().getName()}</p>

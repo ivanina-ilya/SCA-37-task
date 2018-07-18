@@ -22,7 +22,7 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
-    @GetMapping("/list")
+    @GetMapping("/list/")
     public String getList(
             @ModelAttribute("model")ModelMap model
             ){
