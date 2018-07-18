@@ -1,8 +1,8 @@
-##Cinema application
+## Cinema application
 
 This is simple basic application for provide some test task from Course SpringMVC #37
 
-####Original task
+#### Original task
 
 1. Based on the codebase of previous hometasks, create a web application, configure Spring MVC application context and dispatcher servlet.
 
@@ -16,7 +16,7 @@ This is simple basic application for provide some test task from Course SpringMV
 
 ~~6. Implement generic exception handler which should redirect all controller exceptions to simple Freemarker view, that just prints exception message.~~
 
-###Instruction
+### Instruction
 
 * Use Maven to build application and Tomcat for run it
 * To configuration:
@@ -68,9 +68,9 @@ mvn clean package
     ```
 * The download data from application to XML did not ready, but it done on jUnit tests (and you can see it there)
 
-###NOTE:
+### NOTE:
 - The application did not make any stylistic changes.
 - Error handling is not fully completed
 - Import events are not finished (there is no schedule binding)
 
-#####All details on: [SCA-37-task](https://github.com/ivanina-ilya/SCA-37-task)
+##### All details on: [SCA-37-task](https://github.com/ivanina-ilya/SCA-37-task)
