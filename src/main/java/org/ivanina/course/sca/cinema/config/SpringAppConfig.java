@@ -13,7 +13,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 @Configuration
-@ComponentScan({"org.ivanina.course.sca.cinema"})
+@ComponentScan({
+        "org.ivanina.course.sca.cinema.controller",
+        "org.ivanina.course.sca.cinema.component"
+})
 public class SpringAppConfig {
 
     @Bean(name = "discounts")

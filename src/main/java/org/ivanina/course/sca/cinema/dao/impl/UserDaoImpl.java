@@ -88,20 +88,25 @@ public class UserDaoImpl implements UserDao {
             GeneratedKeyHolder holder = new GeneratedKeyHolder();
             rows = jdbcTemplate.update(connection -> {
                 PreparedStatement statement = connection.prepareStatement(
-                        "INSERT INTO " + table + " (firstName, lastName, email, birthday) VALUES (?,?,?,?)",
+                        "INSERT INTO " + table + " (firstName, lastName, email, birthday, roles) VALUES (?,?,?,?,?,?)",
                         Statement.RETURN_GENERATED_KEYS
                 );
                 ServiceUtil.statementSetStringOrNull(statement, 1, entity.getFirstName());
                 ServiceUtil.statementSetStringOrNull(statement, 2, entity.getLastName());
                 ServiceUtil.statementSetStringOrNull(statement, 3, entity.getEmail());
                 ServiceUtil.statementSetDateOrNull(statement, 4, birthdayDate);
+                ServiceUtil.statementSetStringOrNull(statement, 5, entity.rolesToString());
+                ServiceUtil.statementSetStringOrNull(statement, 5, entity.getPasswordHash());
                 return statement;
             }, holder);
             entity.setId(holder.getKey().longValue());
         } else {
-            rows = jdbcTemplate.update("UPDATE " + table + " SET firstName=?, lastName=?,email=?, birthday=? WHERE id=?",
+            rows = jdbcTemplate.update(
+                    "UPDATE " + table + " SET firstName=?, lastName=?,email=?, birthday=?, ROLES=?, PASSWORDHASH=? WHERE id=?",
                     entity.getFirstName(), entity.getLastName(), entity.getEmail(),
                     birthdayDate,
+                    entity.rolesToString(),
+                    entity.getPasswordHash(),
                     entity.getId());
         }
         return rows == 0 ? null : entity.getId();
@@ -143,6 +148,8 @@ public class UserDaoImpl implements UserDao {
         java.sql.Date birthdayDate = resultSet.getDate("birthday");
         if (birthdayDate != null)
             user.setBirthday(birthdayDate.toLocalDate());
+        user.setRoles( resultSet.getString("roles") );
+        user.setPasswordHash(resultSet.getString("passwordHash"));
         user.setId(resultSet.getLong("id"));
         return user;
     }

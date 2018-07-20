@@ -1,23 +1,48 @@
 package org.ivanina.course.sca.cinema.config;
 
 
-import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import javax.servlet.Filter;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
-public class WebAppInitializer implements WebApplicationInitializer {
+public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer  {
     @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
+    public void onStartup(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.register(SpringAppConfig.class, WebAppConfig.class, JdbcConfig.class);
+        context.register(WebSecurityConfig.class, SpringAppConfig.class, WebAppConfig.class, JdbcConfig.class);
         context.setServletContext(servletContext);
 
         ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher", new DispatcherServlet(context));
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/");
+    }
+
+    @Override
+    protected Class<?>[] getRootConfigClasses() {
+        return new Class[]{WebSecurityConfig.class};
+    }
+
+    @Override
+    protected Class<?>[] getServletConfigClasses() {
+        return new Class[] {};
+    }
+
+    @Override
+    protected String[] getServletMappings() {
+        return new String[]{};
+    }
+
+
+    @Override
+    protected Filter[] getServletFilters () {
+        DelegatingFilterProxy filterProxy = new DelegatingFilterProxy();
+        // TODO: implement our custom filter
+        filterProxy.setTargetBeanName("testFilter");
+        return new Filter[]{filterProxy};
     }
 }

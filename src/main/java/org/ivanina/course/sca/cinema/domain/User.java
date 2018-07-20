@@ -9,31 +9,34 @@ import org.ivanina.course.sca.cinema.utils.LocalDateSerializer;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDate;
-import java.util.NavigableSet;
-import java.util.Objects;
-import java.util.TreeSet;
-
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class User extends DomainObject {
     @NonNull
     @JacksonXmlProperty(localName = "firstName")
-    private String firstName;
+    protected String firstName;
 
     @JacksonXmlProperty(localName = "lastName")
-    private String lastName;
+    protected String lastName;
 
     @NonNull
     @JacksonXmlProperty(localName = "email")
-    private String email;
+    protected String email;
 
     @JacksonXmlProperty(localName = "birthday")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
-    private LocalDate birthday;
+    protected LocalDate birthday;
 
     @JsonIgnore
-    private NavigableSet<Ticket> tickets = new TreeSet<>();
+    protected NavigableSet<Ticket> tickets = new TreeSet<>();
+
+    @JsonIgnore
+    protected String passwordHash;
+
+    protected List<UserRole> roles;
 
     public User() {
     }
@@ -93,6 +96,35 @@ public class User extends DomainObject {
         this.birthday = birthday;
     }
 
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public List<UserRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<UserRole> roles) {
+        this.roles = roles;
+    }
+
+    public String rolesToString(){
+        if(roles == null) return "";
+        return roles.stream().map(UserRole::toString).collect(Collectors.joining(","));
+    }
+
+    public List<UserRole> rolesValueOf(String roles){
+        if(roles == null || roles.length() == 0) return null;
+        return Arrays.stream( roles.split(",") ).map(UserRole::valueOf).collect(Collectors.toList());
+    }
+
+    public void setRoles(String roles){
+        this.setRoles( rolesValueOf(roles) );
+    }
 
     @Override
     public int hashCode() {

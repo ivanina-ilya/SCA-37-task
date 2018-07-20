@@ -66,6 +66,17 @@
             <version>${spring.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
         <dependency><!-- needed for freemarker FreeMarkerConfigurer stuff -->
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>

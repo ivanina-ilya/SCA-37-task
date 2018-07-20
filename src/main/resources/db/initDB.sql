@@ -5,7 +5,9 @@ CREATE TABLE USERS
   firstName VARCHAR(64) NOT NULL,
   lastName VARCHAR(64),
   birthday DATETIME,
-  email VARCHAR(64) NOT NULL
+  email VARCHAR(64) NOT NULL,
+  roles VARCHAR(255),
+  passwordHash VARCHAR(255)
 );
 CREATE UNIQUE INDEX users_email_uindex ON USERS (email);
 -- ----------------------------------------------------
