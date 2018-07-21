@@ -37,12 +37,4 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
         return new String[]{};
     }
 
-
-    @Override
-    protected Filter[] getServletFilters () {
-        DelegatingFilterProxy filterProxy = new DelegatingFilterProxy();
-        // TODO: implement our custom filter
-        filterProxy.setTargetBeanName("testFilter");
-        return new Filter[]{filterProxy};
-    }
 }

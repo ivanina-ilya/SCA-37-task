@@ -1,8 +1,8 @@
 <html>
 <head>
-    <title>404</title>
+    <title>Error ${httpErrorCode?string}</title>
 </head>
 <body>
-<h4>404</h4>
+<h4>${errorMsg}</h4>
 </body>
 </html>

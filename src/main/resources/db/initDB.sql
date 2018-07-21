@@ -6,7 +6,7 @@ CREATE TABLE USERS
   lastName VARCHAR(64),
   birthday DATETIME,
   email VARCHAR(64) NOT NULL,
-  roles VARCHAR(255),
+  roles VARCHAR(255) DEFAULT 'REGISTERED',
   passwordHash VARCHAR(255)
 );
 CREATE UNIQUE INDEX users_email_uindex ON USERS (email);
@@ -56,6 +56,7 @@ CREATE TABLE TICKETS
   price DECIMAL,
   added DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+-- ---------------------------------------------------
 
 DROP TABLE IF EXISTS TICKETS_PREBOOK;
 CREATE TABLE TICKETS_PREBOOK
@@ -67,4 +68,10 @@ CREATE TABLE TICKETS_PREBOOK
   price DECIMAL,
   added DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+-- --------------------------------------------------
+
+DROP TABLE IF EXISTS persistent_logins;
+create table persistent_logins (username varchar(64) not null, series varchar(64) primary key, token varchar(64) not null, last_used timestamp not null);
+
 

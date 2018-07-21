@@ -29,12 +29,17 @@ public class ErrorController {
                 errorMsg = "Http Error Code: 404. Resource not found";
                 break;
             }
+            case 403: {
+                errorMsg = "Http Error Code: 403. Forbidden";
+                break;
+            }
             case 500: {
                 errorMsg = "Http Error Code: 500. Internal Server Error";
                 break;
             }
         }
         errorPage.addObject("errorMsg", errorMsg);
+        errorPage.addObject("httpErrorCode", httpErrorCode);
         return errorPage;
     }
 
