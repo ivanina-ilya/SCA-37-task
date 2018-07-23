@@ -88,7 +88,7 @@ public class UserDaoImpl implements UserDao {
             GeneratedKeyHolder holder = new GeneratedKeyHolder();
             rows = jdbcTemplate.update(connection -> {
                 PreparedStatement statement = connection.prepareStatement(
-                        "INSERT INTO " + table + " (firstName, lastName, email, birthday, roles) VALUES (?,?,?,?,?,?)",
+                        "INSERT INTO " + table + " (firstName, lastName, email, birthday, roles, passwordHash) VALUES (?,?,?,?,?,?)",
                         Statement.RETURN_GENERATED_KEYS
                 );
                 ServiceUtil.statementSetStringOrNull(statement, 1, entity.getFirstName());
@@ -96,7 +96,7 @@ public class UserDaoImpl implements UserDao {
                 ServiceUtil.statementSetStringOrNull(statement, 3, entity.getEmail());
                 ServiceUtil.statementSetDateOrNull(statement, 4, birthdayDate);
                 ServiceUtil.statementSetStringOrNull(statement, 5, entity.rolesToString());
-                ServiceUtil.statementSetStringOrNull(statement, 5, entity.getPasswordHash());
+                ServiceUtil.statementSetStringOrNull(statement, 6, entity.getPasswordHash());
                 return statement;
             }, holder);
             entity.setId(holder.getKey().longValue());

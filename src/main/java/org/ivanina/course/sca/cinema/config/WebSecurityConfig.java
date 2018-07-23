@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -28,6 +30,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Qualifier("dataSource")
     private DataSource dataSource;
 
+    @Autowired
+    @Qualifier("customLogoutHandler")
+    private LogoutHandler customLogoutHandler;
+
+
+    @Bean(name = "persistentTokenRepository")
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
+        db.setDataSource(dataSource);
+        return db;
+    }
+
+
+    @Bean("authenticationManagerBean")
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
     @Override
     protected void configure(
@@ -44,29 +64,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/user/**", "/booking/**").hasAnyAuthority(UserRole.REGISTERED +"", UserRole.ADMIN +"")
                     .and()
                 .formLogin()
+                    .loginPage("/login")
                     .permitAll()
                     .and()
                 .logout()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // DO NOT RECOMMENDED !
                     .logoutSuccessUrl("/")
+                    .addLogoutHandler(customLogoutHandler)
                     .permitAll()
                     .and()
-                .rememberMe().rememberMeParameter("remember-me").tokenRepository(persistentTokenRepository())
-
-                    /*.and()
-                .csrf().disable()*/
-
-                /*.and()
-                .httpBasic()*/;
+                .rememberMe().rememberMeParameter("remember-me").tokenRepository(persistentTokenRepository());
     }
-
-    @Bean(name = "persistentTokenRepository")
-    public PersistentTokenRepository persistentTokenRepository() {
-        JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
-        db.setDataSource(dataSource);
-        return db;
-    }
-
 
 
 }

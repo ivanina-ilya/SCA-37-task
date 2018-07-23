@@ -6,8 +6,8 @@ import javax.servlet.*;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-@Component("testFilter")
-public class TestFilter implements Filter {
+@Component("allTestFilter")
+public class AllTestFilter implements Filter {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -18,8 +18,7 @@ public class TestFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        // System.out.println("-- In TestFilter --");
-        logger.warning("-- In TestFilter --");
+        logger.warning("-- In AllTestFilter --");
         chain.doFilter(request, response);
     }
 
