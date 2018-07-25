@@ -41,6 +41,14 @@ This is simple basic application for provide some test task from Course SpringMV
     - Configuration in `WebSecurityConfig`
     
 
+#### Test USERS:
+- User with ‘admin’ access:
+    - Login: j.smith@test.com 
+    - Password: 	John
+- User with only ‘REGISTERED’ access:
+    - Login: 	Petr.Mach@test.com
+    - Password: 	Petr
+
 
 ##### All details on: [SCA-37-task](https://github.com/ivanina-ilya/SCA-37-task)
 
