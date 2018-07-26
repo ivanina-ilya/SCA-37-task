@@ -74,4 +74,14 @@ CREATE TABLE TICKETS_PREBOOK
 DROP TABLE IF EXISTS persistent_logins;
 create table persistent_logins (username varchar(64) not null, series varchar(64) primary key, token varchar(64) not null, last_used timestamp not null);
 
+-- -------------------------------------------------
+
+DROP TABLE IF EXISTS USER_ACCOUNT;
+CREATE TABLE USER_ACCOUNT
+(
+  id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  user_id BIGINT NOT NULL UNIQUE ,
+  money DECIMAL NOT NULL
+);
+
 

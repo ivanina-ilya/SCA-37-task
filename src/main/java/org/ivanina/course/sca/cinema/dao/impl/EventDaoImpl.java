@@ -1,87 +1,32 @@
 package org.ivanina.course.sca.cinema.dao.impl;
 
+import org.ivanina.course.sca.cinema.dao.DaoAbstract;
 import org.ivanina.course.sca.cinema.dao.EventDao;
 import org.ivanina.course.sca.cinema.domain.Event;
 import org.ivanina.course.sca.cinema.domain.EventRating;
 import org.ivanina.course.sca.cinema.utils.ServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.lang.Nullable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashSet;
-import java.util.Set;
 
-public class EventDaoImpl  implements EventDao {
-    private String table = "events";
+public class EventDaoImpl extends DaoAbstract<Event> implements EventDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    public EventDaoImpl(String table) {
+        super(table);
+    }
+
     @Override
     public Event getByName(String name) {
-        try {
-            return jdbcTemplate.queryForObject(
-                    "SELECT * FROM " + table + " WHERE name=?",
-                    new Object[]{name},
-                    new RowMapper<Event>() {
-                        @Nullable
-                        @Override
-                        public Event mapRow(ResultSet resultSet, int i) throws SQLException {
-                            return EventDaoImpl.mapRow(resultSet);
-                        }
-                    }
-            );
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+        return getEntityByQuery("SELECT * FROM " + table + " WHERE name=?", new Object[]{name});
     }
-
-    @Override
-    public Set<Event> getAll() {
-        return new HashSet<>(jdbcTemplate.query("SELECT * FROM  " + table,
-                new RowMapper<Event>() {
-                    @Nullable
-                    @Override
-                    public Event mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return EventDaoImpl.mapRow(resultSet);
-                    }
-                }));
-    }
-
-    @Override
-    public Long getCount() {
-        return jdbcTemplate.queryForObject("SELECT count(*) FROM "+ table, new Object[]{}, Long.class) ;
-    }
-
-
-    @Override
-    public Event get(Long id) {
-        try {
-            Event event = jdbcTemplate.queryForObject(
-                    "SELECT * FROM " + table + " WHERE id=?",
-                    new Object[]{id},
-                    new RowMapper<Event>() {
-                        @Nullable
-                        @Override
-                        public Event mapRow(ResultSet resultSet, int i) throws SQLException {
-                            return EventDaoImpl.mapRow(resultSet);
-                        }
-                    }
-            );
-            return event;
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-    }
-
-
 
     @Override
     public Long save(Event entity) {
@@ -113,45 +58,19 @@ public class EventDaoImpl  implements EventDao {
         return rows == 0 ? null : entity.getId();
     }
 
-    @Override
-    public Boolean remove(Event entity) {
-        if (entity.getId() == null) throw new IllegalArgumentException(
-                String.format("Does not exist ID for Event with name %s", entity.getName()));
-        if (remove(entity.getId())) {
-            entity.setId(null);
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     @Override
-    public Boolean remove(Long id) {
-        int rows = jdbcTemplate.update("DELETE FROM " + table + " WHERE id = ? ", id);
-        return rows == 0 ? false : true;
-    }
-
-
-    @Override
-    public Long getNextIncrement() {
-        return null;
-    }
-
-
-    public static Event mapRow(ResultSet resultSet) throws SQLException {
-        return mapRow(resultSet, new Event(""));
-    }
-
-    public static Event mapRow(ResultSet resultSet, Event event) throws SQLException {
+    public Event mapRow2(ResultSet resultSet, Event entity) throws SQLException {
         if (resultSet == null) return null;
-        if (event == null) event = new Event("");
-        event.setId(resultSet.getLong("id"));
-        event.setName(resultSet.getString("name"));
+        if (entity == null) entity = new Event("");
+        entity.setId(resultSet.getLong("id"));
+        entity.setName(resultSet.getString("name"));
         String eventRating = resultSet.getString("rating");
-        event.setRating(eventRating == null ? null : EventRating.valueOf(eventRating));
-        event.setDuration(resultSet.getLong("duration"));
-        event.setPrice(resultSet.getBigDecimal("price"));
+        entity.setRating(eventRating == null ? null : EventRating.valueOf(eventRating));
+        entity.setDuration(resultSet.getLong("duration"));
+        entity.setPrice(resultSet.getBigDecimal("price"));
 
-        return event;
+        return entity;
     }
+
 }

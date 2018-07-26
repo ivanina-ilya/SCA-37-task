@@ -1,81 +1,30 @@
 package org.ivanina.course.sca.cinema.dao.impl;
 
+import org.ivanina.course.sca.cinema.dao.DaoAbstract;
 import org.ivanina.course.sca.cinema.dao.UserDao;
 import org.ivanina.course.sca.cinema.domain.User;
 import org.ivanina.course.sca.cinema.utils.ServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.lang.Nullable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashSet;
-import java.util.Set;
 
-public class UserDaoImpl implements UserDao {
-    private String table = "users";
+public class UserDaoImpl extends DaoAbstract<User> implements UserDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Override
-    public Set<User> getAll() {
-        return new HashSet<>(jdbcTemplate.query("SELECT * FROM  " + table,
-                new RowMapper<User>() {
-                    @Nullable
-                    @Override
-                    public User mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return UserDaoImpl.mapRow(resultSet);
-                    }
-                }));
-    }
-
-    @Override
-    public Long getCount() {
-        return jdbcTemplate.queryForObject("SELECT count(*) FROM "+ table, new Object[]{}, Long.class) ;
-    }
-
-    @Override
-    public User get(Long id) {
-        try {
-            return jdbcTemplate.queryForObject(
-                    "SELECT * FROM " + table + " WHERE id=?",
-                    new Object[]{id},
-                    new RowMapper<User>() {
-                        @Nullable
-                        @Override
-                        public User mapRow(ResultSet resultSet, int i) throws SQLException {
-                            return UserDaoImpl.mapRow(resultSet);
-                        }
-                    }
-            );
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+    public UserDaoImpl(String table) {
+        super(table);
     }
 
     @Override
     public User getByEmail(String email) {
-        try {
-            return jdbcTemplate.queryForObject(
-                    "SELECT * FROM " + table + " WHERE email=?",
-                    new Object[]{email},
-                    new RowMapper<User>() {
-                        @Nullable
-                        @Override
-                        public User mapRow(ResultSet resultSet, int i) throws SQLException {
-                            return UserDaoImpl.mapRow(resultSet);
-                        }
-                    }
-            );
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+        return getEntityByQuery("SELECT * FROM " + table + " WHERE email=?", new Object[]{email});
     }
 
     @Override
@@ -113,44 +62,18 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Boolean remove(User entity) {
-        if (entity.getId() == null) throw new IllegalArgumentException(
-                String.format("Does not exist ID for User with email %s", entity.getEmail()));
-        if (remove(entity.getId())) {
-            entity.setId(null);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public Boolean remove(Long id) {
-        int rows = jdbcTemplate.update("DELETE FROM " + table + " WHERE id = ? ", id);
-        return rows == 0 ? false : true;
-    }
-
-    @Override
-    public Long getNextIncrement() {
-        return null;
-    }
-
-    public static User mapRow(ResultSet resultSet) throws SQLException {
-        return mapRow(resultSet, new User("", ""));
-    }
-
-    public static User mapRow(ResultSet resultSet, User user) throws SQLException {
+    public User mapRow2(ResultSet resultSet, User entity) throws SQLException {
         if (resultSet == null) return null;
-        if (user == null) user = new User("", "");
-        user.setFirstName(resultSet.getString("firstName"));
-        user.setLastName(resultSet.getString("lastName"));
-        user.setEmail(resultSet.getString("email"));
+        if (entity == null) entity = new User("", "");
+        entity.setFirstName(resultSet.getString("firstName"));
+        entity.setLastName(resultSet.getString("lastName"));
+        entity.setEmail(resultSet.getString("email"));
         java.sql.Date birthdayDate = resultSet.getDate("birthday");
         if (birthdayDate != null)
-            user.setBirthday(birthdayDate.toLocalDate());
-        user.setRoles( resultSet.getString("roles") );
-        user.setPasswordHash(resultSet.getString("passwordHash"));
-        user.setId(resultSet.getLong("id"));
-        return user;
+            entity.setBirthday(birthdayDate.toLocalDate());
+        entity.setRoles( resultSet.getString("roles") );
+        entity.setPasswordHash(resultSet.getString("passwordHash"));
+        entity.setId(resultSet.getLong("id"));
+        return entity;
     }
 }

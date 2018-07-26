@@ -1,11 +1,11 @@
 package org.ivanina.course.sca.cinema.dao.impl;
 
 import org.ivanina.course.sca.cinema.dao.AuditoriumDao;
+import org.ivanina.course.sca.cinema.dao.DaoAbstract;
 import org.ivanina.course.sca.cinema.domain.Auditorium;
 import org.ivanina.course.sca.cinema.domain.EventSchedule;
 import org.ivanina.course.sca.cinema.utils.ServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -18,72 +18,19 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AuditoriumDaoImpl implements AuditoriumDao {
-    private String table = "Auditoriums";
+public class AuditoriumDaoImpl extends DaoAbstract<Auditorium> implements AuditoriumDao {
+
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    public AuditoriumDaoImpl(String table) {
+        super(table);
+    }
+
     @Override
     public Auditorium getByName(String name) {
-        try {
-            return getSet("SELECT * FROM " + table + " WHERE name=?",
-                    new Object[]{name})
-                    .stream().findFirst().orElse(null);
-            /*return jdbcTemplate.queryForObject(
-                    "SELECT * FROM " + table + " WHERE name=?",
-                    new Object[]{name},
-                    new RowMapper<Auditorium>() {
-                        @Nullable
-                        @Override
-                        public Auditorium mapRow(ResultSet resultSet, int i) throws SQLException {
-                            return mapRow(resultSet);
-                        }
-                    }
-            );*/
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-    }
-
-    @Override
-    public Auditorium get(Long auditoriumId) {
-        try {
-            return getSet("SELECT * FROM " + table + " WHERE id=?",
-                    new Object[]{auditoriumId}).stream().findFirst().get();
-            /*return jdbcTemplate.queryForObject(
-                    "SELECT * FROM " + table + " WHERE id=?",
-                    new Object[]{auditoriumId},
-                    new RowMapper<Auditorium>() {
-                        @Nullable
-                        @Override
-                        public Auditorium mapRow(ResultSet resultSet, int i) throws SQLException {
-                            return mapRow(resultSet);
-                        }
-                    }
-            );*/
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-
-    }
-
-    @Override
-    public Set<Auditorium> getAll() {
-        return getSet("SELECT * FROM  " + table, new Object[]{});
-        /*return new HashSet<>(jdbcTemplate.query("SELECT * FROM  " + table,
-                new RowMapper<Auditorium>() {
-                    @Nullable
-                    @Override
-                    public Auditorium mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return mapRow(resultSet);
-                    }
-                }));*/
-    }
-
-    @Override
-    public Long getCount() {
-        return jdbcTemplate.queryForObject("SELECT count(*) FROM "+ table, new Object[]{}, Long.class) ;
+        return getEntityByQuery("SELECT * FROM " + table + " WHERE name=?", new Object[]{name});
     }
 
     @Override
@@ -116,24 +63,6 @@ public class AuditoriumDaoImpl implements AuditoriumDao {
 
 
     @Override
-    public Boolean remove(Auditorium entity) {
-        if (entity.getId() == null) throw new IllegalArgumentException(
-                String.format("Does not exist ID for Auditorium with name %s", entity.getName()));
-        return remove(entity.getId());
-    }
-
-    @Override
-    public Boolean remove(Long id) {
-        return jdbcTemplate.update("DELETE FROM " + table + " WHERE id = ? ", id) != 0;
-    }
-
-    @Override
-    public Long getNextIncrement() {
-        return null;
-    }
-
-
-    @Override
     public Set<Long> getReservedSeats(EventSchedule eventSchedule) {
         return new HashSet<>(jdbcTemplate.query("SELECT SEAT FROM TICKETS WHERE EVENTSCHEDULE_ID=?",
                 new Object[]{eventSchedule.getId()},
@@ -146,35 +75,20 @@ public class AuditoriumDaoImpl implements AuditoriumDao {
                 }));
     }
 
-
-    public Auditorium mapRow2(ResultSet resultSet) throws SQLException {
-        return mapRow(resultSet, null);
-    }
-
-    public Auditorium mapRow(ResultSet resultSet, Auditorium auditorium) throws SQLException {
+    @Override
+    public Auditorium mapRow2(ResultSet resultSet, Auditorium entity) throws SQLException {
         if (resultSet == null) return null;
-        if (auditorium == null) auditorium = new Auditorium("");
+        if (entity == null) entity = new Auditorium("");
 
-        auditorium.setId(resultSet.getLong("id"));
-        auditorium.setName(resultSet.getString("name"));
-        auditorium.setSeats(resultSet.getLong("seats"));
-        auditorium.setVipSeats(resultSet.getString("vipSeats") != null ?
+        entity.setId(resultSet.getLong("id"));
+        entity.setName(resultSet.getString("name"));
+        entity.setSeats(resultSet.getLong("seats"));
+        entity.setVipSeats(resultSet.getString("vipSeats") != null ?
                 Auditorium.vipSeatsParse(resultSet.getString("vipSeats")) :
                 null);
-        return auditorium;
+        return entity;
     }
 
-    private Set<Auditorium> getSet(String sql, Object[] args){
-        return new HashSet<>(jdbcTemplate.query(sql,
-                args,
-                new RowMapper<Auditorium>() {
-                    @Nullable
-                    @Override
-                    public Auditorium mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return mapRow2(resultSet);
-                    }
-                }));
-    }
 
 
 }

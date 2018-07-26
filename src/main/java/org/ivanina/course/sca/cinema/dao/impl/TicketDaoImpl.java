@@ -1,6 +1,6 @@
 package org.ivanina.course.sca.cinema.dao.impl;
 
-import org.ivanina.course.sca.cinema.dao.EventDao;
+import org.ivanina.course.sca.cinema.dao.DaoAbstract;
 import org.ivanina.course.sca.cinema.dao.EventScheduleDao;
 import org.ivanina.course.sca.cinema.dao.TicketDao;
 import org.ivanina.course.sca.cinema.dao.UserDao;
@@ -22,20 +22,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Map;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-public class TicketDaoImpl implements TicketDao {
-    private String table = "Tickets";
+public class TicketDaoImpl extends DaoAbstract<Ticket> implements TicketDao {
     private String tablePreSave = "TICKETS_PREBOOK";
     private String tableUser = "Users";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    @Qualifier("eventDao")
-    private EventDao eventDao;
 
     @Autowired
     @Qualifier("eventScheduleDao")
@@ -44,6 +42,10 @@ public class TicketDaoImpl implements TicketDao {
     @Autowired
     @Qualifier("userDao")
     private UserDao userDao;
+
+    public TicketDaoImpl(String table) {
+        super(table);
+    }
 
     @Override
     public NavigableSet<Ticket> getTicketsByUser(Long userId) {
@@ -59,7 +61,6 @@ public class TicketDaoImpl implements TicketDao {
             return null;
         }
     }
-
 
     @Override
     public NavigableSet<Ticket> getTicketsByUserForEvent(User user, EventSchedule eventSchedule) {
@@ -81,7 +82,6 @@ public class TicketDaoImpl implements TicketDao {
         }
     }
 
-
     @Override
     public NavigableSet<Ticket> getTicketsByEvent(EventSchedule eventSchedule) {
         try {
@@ -99,28 +99,6 @@ public class TicketDaoImpl implements TicketDao {
         }
     }
 
-    @Override
-    public Set<Ticket> getAll() {
-        return new HashSet<>(jdbcTemplate.query("SELECT * FROM  " + table,
-                new RowMapper<Ticket>() {
-                    @Nullable
-                    @Override
-                    public Ticket mapRow(ResultSet resultSet, int i) throws SQLException {
-                        if (resultSet == null) return null;
-                        return getTicket(resultSet);
-                    }
-                }));
-    }
-
-    @Override
-    public Long getCount() {
-        return jdbcTemplate.queryForObject("SELECT count(*) FROM "+ table, new Object[]{}, Long.class) ;
-    }
-
-    @Override
-    public Ticket get(Long id) {
-        return get(id, table);
-    }
 
     @Override
     public Ticket getPreBookingTicket(Long id) {
@@ -136,7 +114,7 @@ public class TicketDaoImpl implements TicketDao {
                         @Nullable
                         @Override
                         public Ticket mapRow(ResultSet resultSet, int i) throws SQLException {
-                            return getTicket(resultSet);
+                            return mapRow2(resultSet);
                         }
                     }
             );
@@ -201,26 +179,35 @@ public class TicketDaoImpl implements TicketDao {
         }
     }
 
-    @Override
-    public Boolean remove(Long id) {
-        return remove(id, table);
-    }
-
-    private Boolean remove(Long id, String table){
-        int rows = jdbcTemplate.update("DELETE FROM " + table + " WHERE id = ? ", id);
-        return rows == 0 ? false : true;
-    }
 
     @Override
     public Boolean removePreBookingTicket(Ticket ticket) {
-        return remove(ticket.getId(), tablePreSave);
+        int rows = jdbcTemplate.update("DELETE FROM " + tablePreSave + " WHERE id = ? ", ticket.getId());
+        return rows == 0 ? false : true;
     }
+
+
 
     @Override
-    public Long getNextIncrement() {
-        return null;
+    public Ticket mapRow2(ResultSet resultSet, Ticket entity) throws SQLException {
+        if (resultSet == null) return null;
+        User user = userDao.get(resultSet.getLong("user_id"));
+        EventSchedule eventSchedule = eventScheduleDao.get(resultSet.getLong("eventSchedule_id"));
+        if(entity == null)
+            return new Ticket(
+                    resultSet.getLong("id"),
+                    user,
+                    eventSchedule,
+                    resultSet.getLong("seat"),
+                    resultSet.getBigDecimal("price"));
+        else {
+            entity.setUser(user);
+            entity.setEventSchedule(eventSchedule);
+            entity.setSeat(resultSet.getLong("seat"));
+            entity.setPrice(resultSet.getBigDecimal("price"));
+            return entity;
+        }
     }
-
 
     private Ticket getTicket(ResultSet resultSet) throws SQLException {
         if (resultSet == null) return null;

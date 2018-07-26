@@ -72,26 +72,31 @@ public class JdbcConfig {
 
     @Bean(name = "userDao")
     public UserDao userDao() {
-        return new UserDaoImpl();
+        return new UserDaoImpl("users");
     }
 
     @Bean(name = "eventDao")
     public EventDao eventDao() {
-        return new EventDaoImpl();
+        return new EventDaoImpl("events");
     }
 
     @Bean(name = "eventScheduleDao")
     public EventScheduleDao eventScheduleDao() {
-        return new EventScheduleDaoImpl();
+        return new EventScheduleDaoImpl("EventSchedule");
     }
 
     @Bean(name = "auditoriumDao")
     public AuditoriumDao auditoriumDao() {
-        return new AuditoriumDaoImpl();
+        return new AuditoriumDaoImpl("Auditoriums");
     }
 
     @Bean(name = "ticketDao")
     public TicketDao ticketDao() {
-        return new TicketDaoImpl();
+        return new TicketDaoImpl("Tickets");
+    }
+
+    @Bean(name = "userAccountDao")
+    public UserAccountDao userAccountDao() {
+        return new UserAccountDaoImpl("USER_ACCOUNT");
     }
 }

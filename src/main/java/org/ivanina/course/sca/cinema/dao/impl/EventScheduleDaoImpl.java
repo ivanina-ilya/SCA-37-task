@@ -1,27 +1,24 @@
 package org.ivanina.course.sca.cinema.dao.impl;
 
 import org.ivanina.course.sca.cinema.dao.AuditoriumDao;
+import org.ivanina.course.sca.cinema.dao.DaoAbstract;
 import org.ivanina.course.sca.cinema.dao.EventDao;
 import org.ivanina.course.sca.cinema.dao.EventScheduleDao;
 import org.ivanina.course.sca.cinema.domain.EventSchedule;
 import org.ivanina.course.sca.cinema.utils.ServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.lang.Nullable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashSet;
 import java.util.Set;
 
-public class EventScheduleDaoImpl implements EventScheduleDao {
-    private String table = "EventSchedule";
+public class EventScheduleDaoImpl extends DaoAbstract<EventSchedule> implements EventScheduleDao {
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -33,34 +30,8 @@ public class EventScheduleDaoImpl implements EventScheduleDao {
     @Qualifier("auditoriumDao")
     private AuditoriumDao auditoriumDao;
 
-    @Override
-    public Set<EventSchedule> getAll() {
-        return getSet("SELECT * FROM  " + table, new Object[]{});
-    }
-
-    @Override
-    public Long getCount() {
-        return jdbcTemplate.queryForObject("SELECT count(*) FROM "+ table, new Object[]{}, Long.class) ;
-    }
-
-    @Override
-    public EventSchedule get(Long id) {
-        try {
-            EventSchedule eventSchedule = jdbcTemplate.queryForObject(
-                    "SELECT * FROM " + table + " WHERE id=?",
-                    new Object[]{id},
-                    new RowMapper<EventSchedule>() {
-                        @Nullable
-                        @Override
-                        public EventSchedule mapRow(ResultSet resultSet, int i) throws SQLException {
-                            return mapRow2(resultSet);
-                        }
-                    }
-            );
-            return eventSchedule;
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+    public EventScheduleDaoImpl(String table) {
+        super(table);
     }
 
     @Override
@@ -101,54 +72,23 @@ public class EventScheduleDaoImpl implements EventScheduleDao {
         return rows == 0 ? null : entity.getId();
     }
 
-    @Override
-    public Boolean remove(EventSchedule entity) {
-        if (remove(entity.getId())) {
-            entity.setId(null);
-            return true;
-        } else {
-            return false;
-        }
-    }
+
 
     @Override
-    public Boolean remove(Long id) {
-        int rows = jdbcTemplate.update("DELETE FROM " + table + " WHERE id = ? ", id);
-        return rows == 0 ? false : true;
-    }
-
-    @Override
-    public Long getNextIncrement() {
-        return null;
-    }
-
-    public EventSchedule mapRow2(ResultSet resultSet) throws SQLException {
-        return mapRow(resultSet, null);
-    }
-
-    public EventSchedule mapRow(ResultSet resultSet, EventSchedule eventSchedule) throws SQLException {
+    public EventSchedule mapRow2(ResultSet resultSet, EventSchedule entity) throws SQLException {
         if (resultSet == null) return null;
-        if (eventSchedule == null) eventSchedule = new EventSchedule(null, null, null);
-        eventSchedule.setAuditorium( auditoriumDao.get( resultSet.getLong("auditorium_id") ) );
-        eventSchedule.setEvent( eventDao.get(resultSet.getLong("event_id")) );
-        eventSchedule.setStartDateTime(ServiceUtil.localDateTimeParse(resultSet.getString("startDateTime")));
-        eventSchedule.setId(resultSet.getLong("id"));
+        if (entity == null) entity = new EventSchedule(null, null, null);
+        entity.setAuditorium( auditoriumDao.get( resultSet.getLong("auditorium_id") ) );
+        entity.setEvent( eventDao.get(resultSet.getLong("event_id")) );
+        entity.setStartDateTime(ServiceUtil.localDateTimeParse(resultSet.getString("startDateTime")));
+        entity.setId(resultSet.getLong("id"));
 
         ServiceUtil.localDateTimeParse(resultSet.getString("startDateTime"));
 
-        return eventSchedule;
+        return entity;
     }
 
-    private Set<EventSchedule> getSet(String sql, Object[] args){
-        return new HashSet<>(jdbcTemplate.query(sql,
-                args,
-                new RowMapper<EventSchedule>() {
-                    @Nullable
-                    @Override
-                    public EventSchedule mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return mapRow2(resultSet);
-                    }
-                }));
-    }
+
+
 
 }
