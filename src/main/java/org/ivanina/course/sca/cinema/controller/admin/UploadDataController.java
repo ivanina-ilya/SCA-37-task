@@ -26,21 +26,17 @@ public class UploadDataController {
     @Autowired
     private EventService eventService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String uploadUsers(){
-        return baseVewPath+"/upload";
-    }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public String uploadUsers(
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "type", required = true) String type
-    ){
-        if(file.isEmpty()) {
+    ) {
+        if (file.isEmpty()) {
             throw new IllegalArgumentException("Uploaded file is empty");
         } else {
             try {
-                switch (type){
+                switch (type) {
                     case "user":
                     case "users":
                         userService.updateOrInsertUsers(serializer.deSerializeUsers(file.getInputStream()));
@@ -50,12 +46,19 @@ public class UploadDataController {
                         eventService.updateOrInsertEvents(serializer.deSerializeEvent(file.getInputStream()));
                         break;
 
-                    default: throw new IllegalArgumentException("The type of uploaded data have not specified");
+                    default:
+                        throw new IllegalArgumentException("The type of uploaded data have not specified");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return baseVewPath+"/uploadSuccess";
+        return baseVewPath + "/uploadSuccess";
+    }
+
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String uploadUsers() {
+        return baseVewPath + "/upload";
     }
 }

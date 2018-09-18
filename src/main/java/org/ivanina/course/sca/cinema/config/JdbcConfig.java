@@ -69,7 +69,6 @@ public class JdbcConfig {
     }
 
 
-
     @Bean(name = "userDao")
     public UserDao userDao() {
         return new UserDaoImpl("users");

@@ -65,9 +65,8 @@ public class Discount implements Comparable {
     }
 
 
-
     @Override
     public int compareTo(Object o) {
-        return percent.compareTo( ((Discount)o).percent);
+        return percent.compareTo(((Discount) o).percent);
     }
 }

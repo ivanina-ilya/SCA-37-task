@@ -71,7 +71,7 @@ public class UserDaoImpl extends DaoAbstract<User> implements UserDao {
         java.sql.Date birthdayDate = resultSet.getDate("birthday");
         if (birthdayDate != null)
             entity.setBirthday(birthdayDate.toLocalDate());
-        entity.setRoles( resultSet.getString("roles") );
+        entity.setRoles(resultSet.getString("roles"));
         entity.setPasswordHash(resultSet.getString("passwordHash"));
         entity.setId(resultSet.getLong("id"));
         return entity;

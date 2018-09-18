@@ -11,8 +11,10 @@ import java.util.List;
 
 public interface Serializer {
     List<User> deSerializeUsers(InputStream inputStream) throws IOException;
+
     String serializeUserListToXml(List<User> users) throws XMLStreamException, JsonProcessingException;
 
     List<Event> deSerializeEvent(InputStream inputStream) throws IOException;
+
     String serializeEventListToXml(List<Event> users) throws XMLStreamException, JsonProcessingException;
 }

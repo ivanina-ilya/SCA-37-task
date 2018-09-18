@@ -134,7 +134,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Ticket preBookTicket(@Nullable User user, @NonNull EventSchedule eventSchedule, @NonNull Long seat, BigDecimal price){
+    public Ticket preBookTicket(@Nullable User user, @NonNull EventSchedule eventSchedule, @NonNull Long seat, BigDecimal price) {
         Ticket ticket = new Ticket(user, eventSchedule, seat);
         ticket.setPrice(price);
         purchaseValidate(ticket);
@@ -160,13 +160,13 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Ticket convertPreBookingToTicket(Long preBookingTicketId) {
-        return convertPreBookingToTicket( ticketDao.getPreBookingTicket(preBookingTicketId) );
+        return convertPreBookingToTicket(ticketDao.getPreBookingTicket(preBookingTicketId));
     }
 
     @Override
     public Ticket convertPreBookingToTicket(Ticket preBookingTicket) {
         Ticket ticket = null;
-        if(purchaseValidate(preBookingTicket)){
+        if (purchaseValidate(preBookingTicket)) {
             ticket = new Ticket(
                     null,
                     preBookingTicket.getUser(),
@@ -195,10 +195,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Boolean isAvailableSeats(EventSchedule eventSchedule, Long seat) {
-        if(eventSchedule == null) throw new IllegalArgumentException("Dos not exist Schedule for Event");
+        if (eventSchedule == null) throw new IllegalArgumentException("Dos not exist Schedule for Event");
         return getAvailableSeats(eventSchedule).contains(seat);
     }
-
 
 
     @Override

@@ -8,11 +8,16 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRegistration;
 
-public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer  {
+public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
     public void onStartup(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.register(WebSecurityConfig.class, SpringAppConfig.class, WebAppConfig.class, JdbcConfig.class);
+        context.register(
+                WebSecurityConfig.class,
+                SpringAppConfig.class,
+                WebAppConfig.class,
+                JdbcConfig.class
+        );
         context.setServletContext(servletContext);
 
         ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher", new DispatcherServlet(context));
@@ -27,12 +32,13 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[] {};
+        return new Class[]{};
     }
 
     @Override
     protected String[] getServletMappings() {
         return new String[]{};
     }
+
 
 }

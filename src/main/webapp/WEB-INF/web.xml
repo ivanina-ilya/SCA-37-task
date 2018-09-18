@@ -22,6 +22,8 @@
         <url-pattern>/booking/*</url-pattern>
     </filter-mapping>
 
+
+
     <error-page>
         <location>/errors</location>
     </error-page>

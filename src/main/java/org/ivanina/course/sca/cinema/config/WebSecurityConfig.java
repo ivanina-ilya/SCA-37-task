@@ -35,14 +35,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private LogoutHandler customLogoutHandler;
 
 
-    @Bean(name = "persistentTokenRepository")
-    public PersistentTokenRepository persistentTokenRepository() {
-        JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
-        db.setDataSource(dataSource);
-        return db;
-    }
-
-
     @Bean("authenticationManagerBean")
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -52,28 +44,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(
             AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider( authProvider );
+        auth.authenticationProvider(authProvider);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                //.httpBasic().and()
                 .authorizeRequests()
-                    .antMatchers("/event**").permitAll()
-                    .antMatchers("/admin/**","/pdf/**").hasAuthority(UserRole.ADMIN +"")
-                    .antMatchers("/user/**", "/booking/**").hasAnyAuthority(UserRole.REGISTERED +"", UserRole.ADMIN +"")
-                    .and()
+                .antMatchers("/event**").permitAll()
+                .antMatchers("/admin/**", "/pdf/**").hasAuthority(UserRole.ADMIN + "")
+                .antMatchers("/user/**", "/booking/**").hasAnyAuthority(UserRole.REGISTERED + "", UserRole.ADMIN + "")
+                .and()
                 .formLogin()
-                    .loginPage("/login")
-                    .permitAll()
-                    .and()
+                .loginPage("/login")
+                .permitAll()
+                .and()
                 .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // DO NOT RECOMMENDED !
-                    .logoutSuccessUrl("/")
-                    .addLogoutHandler(customLogoutHandler)
-                    .permitAll()
-                    .and()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/")
+                .addLogoutHandler(customLogoutHandler)
+                .permitAll()
+                .and()
                 .rememberMe().rememberMeParameter("remember-me").tokenRepository(persistentTokenRepository());
+    }
+
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
+        db.setDataSource(dataSource);
+        return db;
     }
 
 

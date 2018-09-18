@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 @Component("customLogoutHandler")
 public class CustomLogoutHandler implements LogoutHandler {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
+
     @Override
     public void logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) {
         logger.warning("-- In LogoutHandler --");

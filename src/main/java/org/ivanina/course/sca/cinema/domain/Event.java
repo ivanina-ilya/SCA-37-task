@@ -36,7 +36,6 @@ public class Event extends DomainObject {
     }
 
 
-
     public String getName() {
         return name;
     }

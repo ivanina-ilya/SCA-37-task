@@ -5,7 +5,8 @@
     <title>Title</title>
 </head>
 <body>
-<h3>Enter Username and Password</h3><form name='f' action='/login' method='POST'>
+<h3>Enter Username and Password</h3>
+<form name='f' action='/login' method='POST'>
     <div style=" display: none">
     <pre>
         <#list .data_model?keys as key>
@@ -22,5 +23,6 @@
         <tr><td colspan='2'><input name="submit" type="submit" value="Login"/></td></tr>
         <input name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
     </table>
+</form>
 </body>
 </html>

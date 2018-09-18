@@ -18,7 +18,7 @@ public class AdminIndexController {
     UserService userService;
 
     @GetMapping(value = "/")
-    public String index(){
+    public String index() {
         return "admin/index";
     }
 

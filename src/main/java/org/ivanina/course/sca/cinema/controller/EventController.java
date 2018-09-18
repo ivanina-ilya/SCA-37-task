@@ -24,14 +24,14 @@ public class EventController {
 
     @GetMapping("/list/")
     public String getList(
-            @ModelAttribute("model")ModelMap model
-            ){
+            @ModelAttribute("model") ModelMap model
+    ) {
 
-        Set<EventSchedule> eventScheduleSet =  eventService.getAvailableEventSchedule();
+        Set<EventSchedule> eventScheduleSet = eventService.getAvailableEventSchedule();
 
         Map<Event, Set<EventSchedule>> modelMap = eventScheduleSet.stream()
                 .collect(Collectors.toMap(
-                        EventSchedule::getEvent,p -> p, (p, q) -> p ))
+                        EventSchedule::getEvent, p -> p, (p, q) -> p))
                 .entrySet().stream()
                 .collect(Collectors.toMap(el -> el.getKey(), el -> eventScheduleSet.stream()
                         .filter(e -> e.getEvent().equals(el.getKey()))
@@ -42,17 +42,17 @@ public class EventController {
 
     @GetMapping("/archive")
     public String getArchive(
-            @ModelAttribute("model")ModelMap model
-    ){
+            @ModelAttribute("model") ModelMap model
+    ) {
         model.addAttribute("eventList", eventService.getArchiveEvents());
         return "event/eventArchive";
     }
 
     @GetMapping("/view/{id}")
     public String getEvent(
-            @ModelAttribute("model")ModelMap model,
+            @ModelAttribute("model") ModelMap model,
             @PathVariable Long id
-    ){
+    ) {
         model.addAttribute("event", eventService.get(id));
         return "event/eventView";
     }

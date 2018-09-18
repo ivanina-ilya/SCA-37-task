@@ -69,7 +69,7 @@ public class UserAccountDaoImpl extends DaoAbstract<UserAccount> implements User
         return rows == 0 ? null : entity.getId();
     }
 
-    public  UserAccount mapRow2(ResultSet resultSet, UserAccount ua) throws SQLException {
+    public UserAccount mapRow2(ResultSet resultSet, UserAccount ua) throws SQLException {
         if (resultSet == null) return null;
         if (ua == null) ua = new UserAccount(resultSet.getBigDecimal("money"), resultSet.getLong("id"));
         else {

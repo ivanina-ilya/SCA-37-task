@@ -81,7 +81,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventSchedule createEventSchedule(Long eventId, Long auditoriumId, LocalDateTime dateTime) {
-        return new EventSchedule( eventDao.get(eventId), auditoriumDao.get(auditoriumId), dateTime );
+        return new EventSchedule(eventDao.get(eventId), auditoriumDao.get(auditoriumId), dateTime);
     }
 
     @Override
@@ -140,7 +140,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public void updateOrInsertEvents(List<Event> events) {
         events.forEach(event -> {
-            if(event.getId() != null && eventDao.get(event.getId()) == null){
+            if (event.getId() != null && eventDao.get(event.getId()) == null) {
                 event.setId(null);
             }
             eventDao.save(event);
