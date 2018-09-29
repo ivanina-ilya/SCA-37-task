@@ -19,6 +19,4 @@ public interface Dao<T> {
     Long getNextIncrement();
 
 
-
-
 }

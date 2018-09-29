@@ -68,7 +68,7 @@ public class TicketDaoImpl extends DaoAbstract<Ticket> implements TicketDao {
             return new TreeSet<Ticket>(
                     jdbcTemplate.queryForList(
                             "SELECT t.* FROM  " + table + " t " +
-                                    " RIGHT JOIN "+tableUser+" u ON u.id=t.user_id " +
+                                    " RIGHT JOIN " + tableUser + " u ON u.id=t.user_id " +
                                     " WHERE eventSchedule_id=? AND u.id=? ",
                             new Object[]{
                                     eventSchedule.getId(),
@@ -170,7 +170,7 @@ public class TicketDaoImpl extends DaoAbstract<Ticket> implements TicketDao {
                         entity.getUser() == null ? null : entity.getUser().getId(),
                         entity.getEventSchedule() == null ? null : entity.getEventSchedule().getEvent() == null ? null :
                                 entity.getEventSchedule().getEvent(),
-                        entity.getEventSchedule() == null ? null : entity.getEventSchedule().getStartDateTime() ) );
+                        entity.getEventSchedule() == null ? null : entity.getEventSchedule().getStartDateTime()));
         if (remove(entity.getId())) {
             entity.setId(null);
             return true;
@@ -187,13 +187,12 @@ public class TicketDaoImpl extends DaoAbstract<Ticket> implements TicketDao {
     }
 
 
-
     @Override
     public Ticket mapRow2(ResultSet resultSet, Ticket entity) throws SQLException {
         if (resultSet == null) return null;
         User user = userDao.get(resultSet.getLong("user_id"));
         EventSchedule eventSchedule = eventScheduleDao.get(resultSet.getLong("eventSchedule_id"));
-        if(entity == null)
+        if (entity == null)
             return new Ticket(
                     resultSet.getLong("id"),
                     user,

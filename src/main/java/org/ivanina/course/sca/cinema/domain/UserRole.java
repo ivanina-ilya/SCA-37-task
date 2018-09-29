@@ -5,7 +5,8 @@ public enum UserRole {
     BOOKING_MANAGER("BOOKING_MANAGER"),
     ADMIN("ADMIN");
 
-    private final  String role;
+    private final String role;
+
     UserRole(String role) {
         this.role = role;
     }

@@ -19,11 +19,10 @@ public class UsersPDFView extends AbstractPdfView {
             Document document,
             PdfWriter pdfWriter,
             HttpServletRequest request,
-            HttpServletResponse response) throws Exception
-    {
+            HttpServletResponse response) throws Exception {
         Set<User> users = (Set<User>) map.get("data");
 
-        document.add(new Paragraph(new Chunk("Cinema APP. List of Users.",FontFactory.getFont(FontFactory.HELVETICA, 20))));
+        document.add(new Paragraph(new Chunk("Cinema APP. List of Users.", FontFactory.getFont(FontFactory.HELVETICA, 20))));
 
         Table table = new Table(4);
         table.addCell("ID");
@@ -34,7 +33,7 @@ public class UsersPDFView extends AbstractPdfView {
         users.forEach(user -> {
             try {
                 table.addCell(user.getId().toString());
-                table.addCell(user.getFirstName()+" "+user.getLastName());
+                table.addCell(user.getFirstName() + " " + user.getLastName());
                 table.addCell(user.getEmail());
                 table.addCell(user.getBirthday().toString());
             } catch (BadElementException e) {

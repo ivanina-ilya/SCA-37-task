@@ -90,5 +90,4 @@ public class AuditoriumDaoImpl extends DaoAbstract<Auditorium> implements Audito
     }
 
 
-
 }

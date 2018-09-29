@@ -32,18 +32,18 @@ public class BookingController {
     @GetMapping("/{scheduleId}")
     public ModelAndView bookingEvent(
             @PathVariable Long scheduleId
-    ){
+    ) {
         ModelAndView model = new ModelAndView("booking/book");
         EventSchedule eventSchedule = eventService.getEventSchedule(scheduleId);
         model.addObject("users", userService.getAll());
         model.addObject("eventSchedule", eventSchedule);
         model.addObject("seats",
-                LongStream.rangeClosed(1, eventSchedule.getAuditorium().getSeats() ).boxed()
+                LongStream.rangeClosed(1, eventSchedule.getAuditorium().getSeats()).boxed()
                         .collect(
                                 Collectors.toMap(
                                         Long::new,
-                                        p-> eventSchedule.getAuditorium().getVipSeats() != null && eventSchedule.getAuditorium().getVipSeats().contains(p),
-                                        (p,q)-> p)
+                                        p -> eventSchedule.getAuditorium().getVipSeats() != null && eventSchedule.getAuditorium().getVipSeats().contains(p),
+                                        (p, q) -> p)
                         )
         );
         model.addObject("availableSeats", bookingService.getAvailableSeats(eventSchedule));
@@ -56,20 +56,19 @@ public class BookingController {
             @PathVariable Long scheduleId,
             @RequestParam("user") Long userId,
             @RequestParam("seat") Long seat
-    ){
+    ) {
         ModelAndView model = new ModelAndView("booking/bookConfirmation");
 
         EventSchedule eventSchedule = eventService.getEventSchedule(scheduleId);
         User user = userService.get(userId);
         Discount discount = discountService.getDiscount(user, eventSchedule, 1L);
-        BigDecimal newPrice = discountService.calculatePrice(eventSchedule.getEvent().getPrice(),discount.getPercent());
+        BigDecimal newPrice = discountService.calculatePrice(eventSchedule.getEvent().getPrice(), discount.getPercent());
 
         Ticket ticket = bookingService.preBookTicket(user, eventSchedule, seat, newPrice);
         model.addObject("ticket", ticket);
         model.addObject("discount", discount);
         return model;
     }
-
 
 
 }

@@ -112,18 +112,18 @@ public class User extends DomainObject {
         this.roles = roles;
     }
 
-    public String rolesToString(){
-        if(roles == null) return "";
+    public String rolesToString() {
+        if (roles == null) return "";
         return roles.stream().map(UserRole::toString).collect(Collectors.joining(","));
     }
 
-    public List<UserRole> rolesValueOf(String roles){
-        if(roles == null || roles.length() == 0) return null;
-        return Arrays.stream( roles.split(",") ).map(UserRole::valueOf).collect(Collectors.toList());
+    public List<UserRole> rolesValueOf(String roles) {
+        if (roles == null || roles.length() == 0) return null;
+        return Arrays.stream(roles.split(",")).map(UserRole::valueOf).collect(Collectors.toList());
     }
 
-    public void setRoles(String roles){
-        this.setRoles( rolesValueOf(roles) );
+    public void setRoles(String roles) {
+        this.setRoles(rolesValueOf(roles));
     }
 
     @Override

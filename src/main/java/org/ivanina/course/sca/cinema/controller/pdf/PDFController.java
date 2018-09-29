@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class PDFController  {
+public class PDFController {
     @Autowired
     UserService userService;
 
@@ -28,21 +28,22 @@ public class PDFController  {
     @GetMapping("/pdf/list/{type}/")
     public ModelAndView getUserList(
             @PathVariable("type") String type
-    ){
-        switch (type){
+    ) {
+        switch (type) {
             case "user":
             case "users":
-                return new ModelAndView(usersPDFView, "data",userService.getAll());
+                return new ModelAndView(usersPDFView, "data", userService.getAll());
             case "event":
             case "events":
-                return new ModelAndView(eventsPDFView, "data",eventService.getAll());
+                return new ModelAndView(eventsPDFView, "data", eventService.getAll());
 
-            default: throw new IllegalArgumentException("Undefined type");
+            default:
+                throw new IllegalArgumentException("Undefined type");
         }
     }
 
     @GetMapping("/pdf/downloads/")
-    public String indexPage(){
+    public String indexPage() {
         return "pdf/index";
     }
 }

@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class DaoAbstract<T extends DomainObject> implements Dao<T>  {
+public abstract class DaoAbstract<T extends DomainObject> implements Dao<T> {
 
     @Autowired
     protected JdbcTemplate jdbcTemplate;
@@ -26,7 +26,7 @@ public abstract class DaoAbstract<T extends DomainObject> implements Dao<T>  {
 
     @Override
     public Long getCount() {
-        return jdbcTemplate.queryForObject("SELECT count(*) FROM "+ table, new Object[]{}, Long.class) ;
+        return jdbcTemplate.queryForObject("SELECT count(*) FROM " + table, new Object[]{}, Long.class);
     }
 
     @Override
@@ -85,11 +85,11 @@ public abstract class DaoAbstract<T extends DomainObject> implements Dao<T>  {
 
     public abstract T mapRow2(ResultSet resultSet, T entity) throws SQLException;
 
-    public  T mapRow2(ResultSet resultSet) throws SQLException {
+    public T mapRow2(ResultSet resultSet) throws SQLException {
         return mapRow2(resultSet, null);
     }
 
-    public Set<T> getSet(String sql, Object[] args){
+    public Set<T> getSet(String sql, Object[] args) {
         return new HashSet<>(jdbcTemplate.query(
                 sql,
                 args,

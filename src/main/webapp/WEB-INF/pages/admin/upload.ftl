@@ -7,6 +7,7 @@
 <body>
 <a href="/">Home</a>
 <form method="post" enctype="multipart/form-data">
+    <#--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />-->
 
     <p>Type of data for upload:
     <select name="type">

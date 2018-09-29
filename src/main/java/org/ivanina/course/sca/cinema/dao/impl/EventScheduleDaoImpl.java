@@ -73,13 +73,12 @@ public class EventScheduleDaoImpl extends DaoAbstract<EventSchedule> implements 
     }
 
 
-
     @Override
     public EventSchedule mapRow2(ResultSet resultSet, EventSchedule entity) throws SQLException {
         if (resultSet == null) return null;
         if (entity == null) entity = new EventSchedule(null, null, null);
-        entity.setAuditorium( auditoriumDao.get( resultSet.getLong("auditorium_id") ) );
-        entity.setEvent( eventDao.get(resultSet.getLong("event_id")) );
+        entity.setAuditorium(auditoriumDao.get(resultSet.getLong("auditorium_id")));
+        entity.setEvent(eventDao.get(resultSet.getLong("event_id")));
         entity.setStartDateTime(ServiceUtil.localDateTimeParse(resultSet.getString("startDateTime")));
         entity.setId(resultSet.getLong("id"));
 
@@ -87,8 +86,6 @@ public class EventScheduleDaoImpl extends DaoAbstract<EventSchedule> implements 
 
         return entity;
     }
-
-
 
 
 }

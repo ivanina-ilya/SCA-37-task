@@ -53,12 +53,18 @@ public class SpringAppConfig {
     }
 
     @Bean(name = "serializer")
-    public Serializer xmlSerializer(){ return new XmlSerializer(); }
+    public Serializer xmlSerializer() {
+        return new XmlSerializer();
+    }
 
     @Bean(name = "usersPDFView")
-    public UsersPDFView usersPDFView(){ return  new UsersPDFView(); }
+    public UsersPDFView usersPDFView() {
+        return new UsersPDFView();
+    }
 
     @Bean(name = "eventsPDFView")
-    public EventsPDFView eventsPDFView(){ return  new EventsPDFView(); }
+    public EventsPDFView eventsPDFView() {
+        return new EventsPDFView();
+    }
 
 }

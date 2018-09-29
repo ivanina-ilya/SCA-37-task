@@ -12,7 +12,7 @@ import java.util.List;
 
 public class XmlSerializer implements Serializer {
 
-    private XmlMapper getXmlMapper(){
+    private XmlMapper getXmlMapper() {
         XmlMapper xmlMapper = new XmlMapper();
         xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         return xmlMapper;

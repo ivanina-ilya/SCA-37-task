@@ -35,10 +35,10 @@ public class AuthProvider implements AuthenticationProvider {
 
         User user = userService.getUserByEmail(name);
 
-        if(user == null || user.getId() == null)
+        if (user == null || user.getId() == null)
             throw new BadCredentialsException(String.format("Doesn't exist user with email '%s'", name));
 
-        if(user.getPasswordHash() == null || !passwordEncoder.matches(password,user.getPasswordHash()))
+        if (user.getPasswordHash() == null || !passwordEncoder.matches(password, user.getPasswordHash()))
             throw new BadCredentialsException("The password is wrong");
 
         List<GrantedAuthority> authorities = user.getRoles().stream()
@@ -46,7 +46,7 @@ public class AuthProvider implements AuthenticationProvider {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
-        return new UsernamePasswordAuthenticationToken(name, password,authorities);
+        return new UsernamePasswordAuthenticationToken(name, password, authorities);
 
     }
 

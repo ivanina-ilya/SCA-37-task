@@ -20,7 +20,7 @@
         <tr><td>Password:</td><td><input type='password' name='password'/></td></tr>
         <tr><td><input type='checkbox' name='remember-me'/></td><td>Remember me.</td></tr>
         <tr><td colspan='2'><input name="submit" type="submit" value="Login"/></td></tr>
-        <input name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
+        <#--<input name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />-->
     </table>
 </body>
 </html>

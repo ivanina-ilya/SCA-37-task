@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateOrInsertUsers(List<User> users) {
         users.forEach(user -> {
-            if(user.getId() != null && userDao.get(user.getId()) == null){
+            if (user.getId() != null && userDao.get(user.getId()) == null) {
                 user.setId(null);
             }
             userDao.save(user);

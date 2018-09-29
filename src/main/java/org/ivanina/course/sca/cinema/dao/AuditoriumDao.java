@@ -7,5 +7,6 @@ import java.util.Set;
 
 public interface AuditoriumDao extends Dao<Auditorium> {
     Auditorium getByName(String name);
+
     Set<Long> getReservedSeats(EventSchedule eventSchedule);
 }

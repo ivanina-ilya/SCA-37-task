@@ -19,8 +19,12 @@ public interface DiscountService {
      * @return discount value from 0 to 100
      */
     Discount getDiscount(@Nullable User user, @NonNull EventSchedule eventSchedule, long numberOfTickets);
+
     Discount getDiscountByBirthday(@Nullable User user, LocalDateTime startDateTime);
+
     Discount getDiscountByCount(@Nullable User user, long numberOfTickets);
+
     Boolean isLuckyWinnerDiscount();
+
     BigDecimal calculatePrice(BigDecimal price, byte discount);
 }

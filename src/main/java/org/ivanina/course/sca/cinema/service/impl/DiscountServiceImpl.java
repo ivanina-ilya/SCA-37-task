@@ -34,16 +34,16 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public BigDecimal calculatePrice(BigDecimal price, byte discount) {
-        return price.subtract(price.multiply( new BigDecimal(discount) ).divide(new BigDecimal(100)) )  ;
+        return price.subtract(price.multiply(new BigDecimal(discount)).divide(new BigDecimal(100)));
     }
 
     @Override
     public Discount getDiscount(@Nullable User user, EventSchedule eventSchedule, long numberOfTickets) {
         Set<Discount> discountList = new HashSet<>();
 
-        if(discountByLucky > 0 && isLuckyWinnerDiscount()) {
+        if (discountByLucky > 0 && isLuckyWinnerDiscount()) {
             log.info("<<< YOU WINN!!! >>>");
-            return new Discount( discountByLucky,true,false,false);
+            return new Discount(discountByLucky, true, false, false);
         }
 
         discountList.add(getDiscountByBirthday(user, eventSchedule.getStartDateTime()));
@@ -51,7 +51,7 @@ public class DiscountServiceImpl implements DiscountService {
 
         return discountList.stream()
                 .filter(Objects::nonNull)
-                .max(Discount::compareTo).orElse( new Discount( (byte) 0,false,false,false) ) ;
+                .max(Discount::compareTo).orElse(new Discount((byte) 0, false, false, false));
     }
 
     @Override
@@ -59,14 +59,14 @@ public class DiscountServiceImpl implements DiscountService {
         if (user != null && user.getBirthday() != null &&
                 user.getBirthday().isAfter(airDateTime.toLocalDate().minusDays(discountBirthdayInterval)) &&
                 user.getBirthday().isBefore(airDateTime.toLocalDate().plusDays(discountBirthdayInterval)))
-            return new Discount( discountByBirthday,false,true,false);
+            return new Discount(discountByBirthday, false, true, false);
         return null;
     }
 
     @Override
     public Discount getDiscountByCount(@Nullable User user, long numberOfTickets) {
         if (numberOfTickets >= discountCountLimit || (user != null && (user.getTickets().size() + 1) % discountCountLimit == 0))
-            return new Discount( discountByCount,false,false,true);
+            return new Discount(discountByCount, false, false, true);
         return null;
     }
 

@@ -22,17 +22,18 @@ import javax.sql.DataSource;
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private AuthProvider authProvider;
+    private final AuthProvider authProvider;
 
+    private final DataSource dataSource;
 
-    @Autowired
-    @Qualifier("dataSource")
-    private DataSource dataSource;
+    private final LogoutHandler customLogoutHandler;
 
     @Autowired
-    @Qualifier("customLogoutHandler")
-    private LogoutHandler customLogoutHandler;
+    public WebSecurityConfig(AuthProvider authProvider, @Qualifier("dataSource") DataSource dataSource, @Qualifier("customLogoutHandler") LogoutHandler customLogoutHandler) {
+        this.authProvider = authProvider;
+        this.dataSource = dataSource;
+        this.customLogoutHandler = customLogoutHandler;
+    }
 
 
     @Bean(name = "persistentTokenRepository")
@@ -52,27 +53,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(
             AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider( authProvider );
+        auth.authenticationProvider(authProvider);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/event**").permitAll()
-                    .antMatchers("/admin/**","/pdf/**").hasAuthority(UserRole.ADMIN +"")
-                    .antMatchers("/user/**", "/booking/**").hasAnyAuthority(UserRole.REGISTERED +"", UserRole.ADMIN +"")
-                    .and()
+                .antMatchers("/event**").permitAll()
+                .antMatchers("/admin/**", "/pdf/**").hasAuthority(UserRole.ADMIN + "")
+                .antMatchers("/user/**", "/booking/**").hasAnyAuthority(UserRole.REGISTERED + "", UserRole.ADMIN + "")
+                .and()
                 .formLogin()
-                    .loginPage("/login")
-                    .permitAll()
-                    .and()
+                .loginPage("/login")
+                .permitAll()
+                .and()
                 .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // DO NOT RECOMMENDED !
-                    .logoutSuccessUrl("/")
-                    .addLogoutHandler(customLogoutHandler)
-                    .permitAll()
-                    .and()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // DO NOT RECOMMENDED !
+                .logoutSuccessUrl("/")
+                .addLogoutHandler(customLogoutHandler)
+                .permitAll()
+                .and()
                 .rememberMe().rememberMeParameter("remember-me").tokenRepository(persistentTokenRepository());
     }
 

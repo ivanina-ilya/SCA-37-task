@@ -36,17 +36,16 @@ public class UserController {
     @RequestMapping(value = "/tickets/{userId}", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView getUserTickets(
             @PathVariable("userId") Long userId,
-            @RequestParam(value = "preBookTicketId", required = false) Long preBookTicketId)
-    {
+            @RequestParam(value = "preBookTicketId", required = false) Long preBookTicketId) {
         ModelAndView model = new ModelAndView("user/userTickets");
 
-        if(preBookTicketId != null){
+        if (preBookTicketId != null) {
             bookingService.convertPreBookingToTicket(preBookTicketId);
         }
 
         User user = userService.get(userId);
-        model.addObject("tickets", bookingService.getTicketsByUser( user ));
-        model.addObject("user", user );
+        model.addObject("tickets", bookingService.getTicketsByUser(user));
+        model.addObject("user", user);
 
         return model;
     }
